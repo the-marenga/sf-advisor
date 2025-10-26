@@ -1,132 +1,104 @@
 // background.js
-const TARGET_HOST_REGEX = /(?:https?:\/\/)?(?:.*\.)?sfgame\.net\/cmd\.php/i;
 const MF_ENDPOINT = "https://mfbot.marenga.dev/scrapbook_advice";
 
 // Storage key for saved items
-const STORAGE_KEY = "scrapbook_items";
+// @ts-ignore
+const STORAGE_KEY = "scrapbook_data";
 
-// helper: save item to storage and notify popup(s)
-async function saveAndNotify(item) {
-  const { id, url } = item;
-  const stored = (await chrome.storage.local.get(STORAGE_KEY))[STORAGE_KEY] || [];
-  stored.unshift(item);
-  // keep only latest 100
-  const truncated = stored.slice(0, 100);
-  await chrome.storage.local.set({ [STORAGE_KEY]: truncated });
-  chrome.runtime.sendMessage({ type: "NEW_SCRAPBOOK_ITEM", item });
-}
+/**
+ * @typedef {object} ScrapbookAdvice
+ * @property {string} playerName The name of the player, that this advice was made for
+ * @property {string} server The base url (https://f8...net) of the server,
+ * that the player is playing on
+ * @property {number} attributes The total amount of attributes the player has
+ * @property {string|null} scrapbook the raw (encoded) scrapbook string. If the
+ * player has not looked at that yet (i.e the game client has not requested
+ * that yet), this will be null
+ */
 
-async function postToMfBot(originalResponse) {
-  try {
-    const res = await fetch(MF_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data: originalResponse })
-    });
-    const json = await res.json();
-    return { ok: true, json };
-  } catch (err) {
-    return { ok: false, error: String(err) };
-  }
-}
+
+/**
+ * @typedef {object} SFCaptureMessage
+ * @property {"SF_CAPTURE"} type
+ * @property {string} body The request body, that contains whatever the server sent back
+ * @property {string} url The request url, that contains the endpoint
+ * @property {chrome.webRequest.HttpHeader[]|null} headers
+ */
 
 // Handle messages from content script / injected page or filterResponseData collector
+/**
+ * @param {SFCaptureMessage} msg
+ * @param {chrome.runtime.MessageSender} _
+ */
 chrome.runtime.onMessage.addListener((msg, _) => {
-  if (!msg || msg.type !== "SCRAPBOOK_CAPTURE") return;
+  if (!msg || msg.type !== "SF_CAPTURE") return;
 
   (async () => {
     try {
-      const { url, body, method, headers } = msg;
-      if (!url || !body) return;
-      if (!TARGET_HOST_REGEX.test(url)) return;
+      const { url, body } = msg;
+      if (typeof (body) != "string" || typeof (url) != "string") return;
 
-      // Only handle requests that match `.*scrapbook.*` per req
-      const match = /scrapbook/i;
-      if (!match.test(url)) return;
+      /** @type {Record<string, string>} */
+      let kvs = {};
+      for (const part of body.split("&")) {
+        const [key, value] = part.split(":");
+        if (!value) continue;
 
-      const id = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,8);
-      const original = typeof body === "string" ? body : JSON.stringify(body);
+        kvs[key.split(".")[0]] = value;
+      }
 
-      // send to mfbot
-      const mfResp = await postToMfBot(original);
+      console.log(JSON.stringify(Object.keys(kvs)));
+      if ("ownplayersave" in kvs) {
+        const attributes = kvs.ownplayersave.split("/").slice(30, 40).map(Number).reduce((a, b) => a + b, 0);        
 
-      const item = {
-        id,
-        url,
-        capturedAt: new Date().toISOString(),
-        original: original,
-        mfResponse: mfResp.ok ? mfResp.json : { error: mfResp.error || "unknown" }
-      };
+        /** @type {ScrapbookAdvice|null} */
+        const old = (await chrome.storage.local.get(STORAGE_KEY))[STORAGE_KEY];
+        if (!old) {
+          if ("ownplayername" in kvs) {
+            // Insert a fully new one 
+            /** @type {ScrapbookAdvice} */
+            const playerData = {
+              playerName: kvs.ownplayername,
+              server: url,
+              attributes,
+              scrapbook: null
+            };
+            await chrome.storage.local.set({ [STORAGE_KEY]: playerData });
+          } else {
+            console.warn("Could not init player data, we do not know the name")
+          }
+        } else {
+          // we have an existing value. 
+          old.attributes = attributes;
+          if ("ownplayername" in kvs) {
+            if (old.playerName != kvs.ownplayername || old.server != url) {
+              old.scrapbook = null;
+              old.playerName = kvs.ownplayername;
+              old.server = url;
+            }
+          }
+          await chrome.storage.local.set({ [STORAGE_KEY]: old });
+        }
+      }
 
-      await saveAndNotify(item);
+      if ("scrapbook" in kvs) {
+        /** @type {ScrapbookAdvice|null} */
+        const stored = (await chrome.storage.local.get(STORAGE_KEY))[STORAGE_KEY];
+
+        if (!stored) {
+          console.warn("captured scrapbook before player state");
+          return
+        };
+        stored.scrapbook = kvs.scrapbook;
+        await chrome.storage.local.set({ [STORAGE_KEY]: stored });
+        chrome.runtime.sendMessage({ type: "NEW_SCRAPBOOK" });
+        return;
+      }
     } catch (err) {
-      console.error("Error handling SCRAPBOOK_CAPTURE:", err);
+      console.error("Error handling sf capture:", err);
     }
   })();
 
   // return true to indicate we may respond asynchronously (not used here)
   return false;
 });
-
-// --- Firefox: try to use webRequest.filterResponseData when available ---
-// We'll attempt to set a listener if the API exists
-if (chrome.webRequest && typeof chrome.webRequest.filterResponseData === "function") {
-  try {
-    chrome.webRequest.onBeforeRequest.addListener(
-      (details) => {
-        // create a stream filter for this request
-        try {
-          const filter = chrome.webRequest.filterResponseData(details.requestId);
-          const decoder = new TextDecoder("utf-8");
-          const encoder = new TextEncoder();
-          let chunks = [];
-
-          filter.ondata = (event) => {
-            chunks.push(new Uint8Array(event.data));
-            // pass through unchanged
-            filter.write(event.data);
-          };
-          filter.onstop = async () => {
-            try {
-              // concatenate chunks
-              let totalLen = chunks.reduce((s, c) => s + c.length, 0);
-              let merged = new Uint8Array(totalLen);
-              let offset = 0;
-              for (const c of chunks) {
-                merged.set(c, offset);
-                offset += c.length;
-              }
-              let text = decoder.decode(merged);
-              // Only forward if URL matches scrapbook
-              if (/scrapbook/i.test(details.url)) {
-                chrome.runtime.sendMessage({
-                  type: "SCRAPBOOK_CAPTURE",
-                  url: details.url,
-                  body: text,
-                  method: details.method,
-                  headers: details.requestHeaders || null
-                });
-              }
-            } catch (err) {
-              console.error("filterResponseData onstop error:", err);
-            } finally {
-              filter.disconnect();
-            }
-          };
-          filter.onerror = (e) => {
-            console.warn("filter error", e);
-            try { filter.disconnect(); } catch(e){}
-          };
-        } catch (err) {
-          console.warn("filterResponseData create failed:", err);
-        }
-        return {};
-      },
-      { urls: ["*://*.sfgame.net/*"] },
-      ["blocking"]
-    );
-  } catch (e) {
-    // API may be unavailable in Chrome; ignore
-    console.info("filterResponseData listener could not be established:", e);
-  }
-}

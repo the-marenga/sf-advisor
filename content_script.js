@@ -1,3 +1,4 @@
+/// <reference types="chrome" />
 // content_script.js
 // This script injects a page-level script that hooks fetch/XHR, because content scripts
 // run in an isolated world and cannot overwrite page's fetch/XHR directly.
@@ -11,14 +12,15 @@
 })();
 
 // Listen to window.postMessage events from the injected script
+/**
+ * @param {MessageEvent} ev
+ */
 window.addEventListener("message", (ev) => {
-  if (!ev.data || ev.data.source !== "EXT_SCRAPBOOK_PAGE_HOOK") return;
+  if (!ev.data || ev.data.source !== "EXT_SF_PAGE_HOOK") return;
   // forward to background
   chrome.runtime.sendMessage({
-    type: "SCRAPBOOK_CAPTURE",
+    type: "SF_CAPTURE",
     url: ev.data.url,
-    body: ev.data.body,
-    method: ev.data.method,
-    headers: ev.data.headers
+    body: ev.data.body
   });
 });

@@ -8,14 +8,16 @@
     XMLHttpRequest: window.XMLHttpRequest
   };
 
-  function trySend(url, body, method = "GET", headers = null) {
+  /**
+   * @param {string} url
+   * @param {string} body
+   */
+  function trySend(url, body) {
     try {
       window.postMessage({
-        source: "EXT_SCRAPBOOK_PAGE_HOOK",
+        source: "EXT_SF_PAGE_HOOK",
         url,
         body,
-        method,
-        headers
       }, "*");
     } catch (e) {
       // ignore
@@ -34,16 +36,12 @@
         // read text if response seems textual or application/json
         cloned.text().then(text => {
           try {
-            if (/scrapbook/i.test(String(args[0]) || "")) {
-              trySend(String(args[0]), text, (args[1] && args[1].method) || "GET", (args[1] && args[1].headers) || null);
-            } else {
-              // also attempt to detect 'scrapbook' within url of response (resp.url)
-              if (/scrapbook/i.test(cloned.url || "")) {
-                trySend(cloned.url, text, (args[1] && args[1].method) || "GET", (args[1] && args[1].headers) || null);
-              }
+            const url = String(args[0]);
+            if (/cmd.php/i.test(url)) {
+              trySend(url.split("cmd.php")[0], text);
             }
-          } catch(e){console.warn(e)}
-        }).catch(()=>{});
+          } catch (e) { console.warn(e) }
+        }).catch(() => { });
         return resp;
       } catch (err) {
         // if fetch failed, propagate
@@ -56,9 +54,15 @@
   (function () {
     function HookedXHR() {
       const xhr = new ORIG.XMLHttpRequest();
+      /** @type {string|null} */
       let url = null;
+      /** @type {string|null} */
       let method = null;
       let _open = xhr.open;
+      /**
+       * @param {string} m
+       * @param {string} u
+       */
       xhr.open = function (m, u, ...rest) {
         method = m;
         url = u;
@@ -66,12 +70,11 @@
       };
       xhr.addEventListener("load", function () {
         try {
-          if (url && /scrapbook/i.test(url)) {
-            let ct = xhr.getResponseHeader && xhr.getResponseHeader("content-type");
-            // Only try to capture text-like responses
-            let text;
-            try { text = xhr.responseText; } catch(e) { text = null; }
-            trySend(url, text, method, ct);
+          if (url && /cmd\.php/i.test(url)) {
+            try { 
+              const text = xhr.responseText; 
+              trySend(url, text);
+            } catch (e) {}
           }
         } catch (e) {
           console.warn("XHR hook error", e);
