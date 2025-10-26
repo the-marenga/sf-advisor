@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "SFGame Scrapbook Advisor",
+  "version": "1.0",
+  "description": "Intercepts scrapbook responses from sfgame.net, posts them to mfbot-api.marenga.dev/scrapbook_advice and shows the result in a popup.",
+  "permissions": ["storage", "scripting", "activeTab", "webRequest"],
+  "host_permissions": [
+    "*://sfgame.net/*",
+    "*://*.sfgame.net/*",
+    "https://mfbot-api.marenga.dev/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Scrapbook Advisor"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://sfgame.net/*", "*://*.sfgame.net/*"],
+      "js": ["content_script.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "icons": {},
+  "web_accessible_resources": [
+    {
+      "resources": ["injected_page_hook.js"],
+      "matches": ["*://sfgame.net/*", "*://*.sfgame.net/*"]
+    }
+  ]
+}
