@@ -45,10 +45,14 @@ async function getBestEnemies(scrapbook, server, max_attrs) {
 
 /**
  * @param {string} text
+ * @param {HTMLElement} element
  */
-function copyToClipboard(text) {
+function copyToClipboard(text, element) {
   navigator.clipboard.writeText(text).then(() => {
-    // Optional: Show a success message
+    element.classList.add("clicked");
+    setTimeout(() => {
+      element.classList.remove("clicked");
+    }, 500);
   }).catch(err => {
     console.error('Failed to copy text: ', err);
   });
@@ -96,22 +100,24 @@ function render() {
 
           const nameDiv = document.createElement("div");
           nameDiv.className = "name";
-          nameDiv.textContent = player.player_name;
+
+          const copyIcon = document.createElement("i");
+          copyIcon.className = "material-icons-outlined copy-icon";
+          copyIcon.textContent = "content_copy";
+          copyIcon.title = "Copy player name";
+          copyIcon.addEventListener("click", () => copyToClipboard(player.player_name, copyIcon));
+          nameDiv.appendChild(copyIcon);
+
+          const nameSpan = document.createElement("span");
+          nameSpan.textContent = player.player_name;
+          nameDiv.appendChild(nameSpan);
 
           const newItemsDiv = document.createElement("div");
           newItemsDiv.className = "new-items";
           newItemsDiv.textContent = player.new_count;
 
-          const copyDiv = document.createElement("div");
-          copyDiv.className = "copy";
-          const copyButton = document.createElement("button");
-          copyButton.textContent = "Copy";
-          copyButton.addEventListener("click", () => copyToClipboard(player.player_name));
-          copyDiv.appendChild(copyButton);
-
           itemDiv.appendChild(nameDiv);
           itemDiv.appendChild(newItemsDiv);
-          itemDiv.appendChild(copyDiv);
           listEl.appendChild(itemDiv);
         }
       } else {

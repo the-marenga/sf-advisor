@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Scrapbook Advice</title>
+  <title>Scrapbook Adviser</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
     :root {
@@ -20,17 +20,27 @@
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
       margin: 0;
       width: 420px;
+      height: 600px;
       background-color: var(--color-gray600);
       color: var(--color-text);
+      display: flex;
+      flex-direction: column;
     }
     h1 {
       font-size: 18px;
       margin: 0;
       padding: 12px;
       background-color: var(--color-gray500);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     .container {
       padding: 12px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
     }
     .player-info {
       margin-bottom: 12px;
@@ -48,6 +58,12 @@
       display: flex;
       gap: 8px;
       align-items: center;
+      justify-content: space-between;
+    }
+    .attributes {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     .attributes label {
       font-size: 14px;
@@ -64,6 +80,8 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+      overflow-y: auto;
+      flex: 1;
     }
     .list-header {
       display: flex;
@@ -72,6 +90,7 @@
       background-color: var(--color-gray500);
       font-weight: bold;
       border-radius: 6px;
+      margin-bottom: 8px;
     }
     .list-header .name {
       flex: 1;
@@ -94,21 +113,27 @@
     .item .name {
       flex: 1;
       font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     .item .new-items {
       width: 100px;
       text-align: center;
     }
-    .item .copy button {
-      padding: 4px 8px;
-      border: none;
-      background-color: var(--color-blue);
-      color: var(--color-text);
-      border-radius: 4px;
+    .copy-icon {
       cursor: pointer;
+      font-size: 18px !important;;
     }
-    .item .copy button:hover {
-      background-color: var(--color-yellow);
+    .copy-icon.clicked {
+      color: var(--color-yellow);
+    }
+    .help-icon {
+      cursor: help;
+      font-size: 18px !important;;
+    }
+    .refresh-icon {
+      font-size: 18px !important;
     }
     .no-items {
       color: var(--color-gray200);
@@ -123,27 +148,34 @@
       color: var(--color-text);
       border-radius: 4px;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     button:hover {
-      background-color: var(--color-yellow);
+      background-color: #a9c2f5;
     }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined&display=swap" rel="stylesheet">
 </head>
 <body>
-  <h1>Scrapbook Advice</h1>
+  <h1>
+    <span>Scrapbook Adviser</span>
+    <a href='https://ko-fi.com/J3J0ULD4J' target='_blank'><img height='28' style='border:0px;height:28px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+  </h1>
   <div class="container">
     <div id="player-info" class="player-info"></div>
     <div class="controls">
-      <button id="refresh">Refresh</button>
       <div class="attributes">
-        <label for="max-attrs">Max Attrs:</label>
+        <label for="max-attrs">Max Attributes</label>
         <input type="number" id="max-attrs" />
+        <i class="material-icons-outlined help-icon" title="Only consider enemies, that have at most this many total attributes (The sum of strength, dexterity, etc.)">help_outline</i>
       </div>
+      <button id="refresh"><i class="material-icons-outlined refresh-icon">refresh</i>Refresh</button>
     </div>
     <div class="list-header">
       <div class="name">Name</div>
       <div class="new-items">New Items</div>
-      <div class="copy"></div>
     </div>
     <div id="list"></div>
   </div>
