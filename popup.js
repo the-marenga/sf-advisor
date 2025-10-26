@@ -7,9 +7,6 @@ const listEl = document.getElementById("list");
 /** @type {HTMLButtonElement} */
 // @ts-ignore
 const refreshBtn = document.getElementById("refresh");
-/** @type {HTMLButtonElement} */
-// @ts-ignore
-const clearBtn = document.getElementById("clear");
 
 // background.js
 const MF_ENDPOINT = "https://mfbot-api.marenga.dev/scrapbook_advice";
@@ -45,12 +42,13 @@ function render() {
     /** @type {PlayerData|null} */
     const advice = res[STORAGE_KEY];
 
-
     listEl.innerHTML = "";
     if (!advice) {
       listEl.innerHTML = `<div class="no-items">No player data</div>`;
       return;
     }
+    console.log(STORAGE_KEY);
+    console.log(advice);
     if (!advice.scrapbook) {
       listEl.innerHTML = `<div class="no-items">No scrapbook data</div>`;
       return;
@@ -58,7 +56,7 @@ function render() {
     listEl.innerHTML = `<div class="no-items">Loading...</div>`;
 
     getBestEnemies(advice.scrapbook, advice.server, advice.attributes).then(a => {
-      listEl.innerHTML = "";
+      listEl.innerHTML = "Player: " + advice.playerName + " " + advice.server + " " + advice.attributes;
       if (a.ok ){
         for (const player of a.players) {
           const div = document.createElement("div");
@@ -91,7 +89,7 @@ document.addEventListener("DOMContentLoaded", render);
 
 // Listen for realtime updates from background
 /**
- * @param {{type: "NEW_SCRAPBOOK_ITEM"}} msg
+ * @param {{type: "NEW_SCRAPBOOK"}} msg
  */
 chrome.runtime.onMessage.addListener((msg) => {
   if (msg && msg.type === "NEW_SCRAPBOOK") {

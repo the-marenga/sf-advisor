@@ -18,9 +18,12 @@
 window.addEventListener("message", (ev) => {
   if (!ev.data || ev.data.source !== "EXT_SF_PAGE_HOOK") return;
   // forward to background
-  chrome.runtime.sendMessage({
-    type: "SF_CAPTURE",
-    url: ev.data.url,
-    body: ev.data.body
-  });
+  try {
+    chrome.runtime.sendMessage({
+      type: "SF_CAPTURE",
+      url: ev.data.url,
+      body: ev.data.body
+    });
+  } catch (error) {
+  }
 });

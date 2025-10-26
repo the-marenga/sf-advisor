@@ -59,6 +59,8 @@ chrome.runtime.onMessage.addListener((msg, _) => {
               attributes,
               scrapbook: null
             };
+            console.log("Inserting:");
+            console.log(playerData);
             await chrome.storage.local.set({ [STORAGE_KEY]: playerData });
           } else {
             console.warn("Could not init player data, we do not know the name")
@@ -73,6 +75,8 @@ chrome.runtime.onMessage.addListener((msg, _) => {
               old.server = url;
             }
           }
+          console.log("updating to:");
+          console.log(old);
           await chrome.storage.local.set({ [STORAGE_KEY]: old });
         }
       }
@@ -82,14 +86,18 @@ chrome.runtime.onMessage.addListener((msg, _) => {
         const stored = (await chrome.storage.local.get(STORAGE_KEY))[STORAGE_KEY];
 
         if (!stored) {
-          console.warn("captured scrapbook before player state");
+          console.warn("Captured scrapbook before player state");
           return
         };
         stored.scrapbook = kvs.scrapbook;
+        console.log("Scrapbook Storing:");
+        console.log(stored);
         await chrome.storage.local.set({ [STORAGE_KEY]: stored });
-        chrome.runtime.sendMessage({ type: "NEW_SCRAPBOOK" });
-        return;
+        // chrome.runtime.sendMessage({ type: "NEW_SCRAPBOOK" });
       }
+      const xxx = (await chrome.storage.local.get(STORAGE_KEY))[STORAGE_KEY];
+      console.log(xxx)
+
     } catch (err) {
       console.error("Error handling sf capture:", err);
     }
