@@ -43,7 +43,6 @@ chrome.runtime.onMessage.addListener((msg, _) => {
         kvs[key.split(".")[0]] = value;
       }
 
-      console.log(JSON.stringify(Object.keys(kvs)));
       if ("ownplayersave" in kvs) {
         const attributes = kvs.ownplayersave.split("/").slice(30, 40).map(Number).reduce((a, b) => a + b, 0);        
 
@@ -59,24 +58,20 @@ chrome.runtime.onMessage.addListener((msg, _) => {
               attributes,
               scrapbook: null
             };
-            console.log("Inserting:");
-            console.log(playerData);
             await chrome.storage.local.set({ [STORAGE_KEY]: playerData });
           } else {
             console.warn("Could not init player data, we do not know the name")
           }
         } else {
           // we have an existing value. 
-          old.attributes = attributes;
           if ("ownplayername" in kvs) {
             if (old.playerName != kvs.ownplayername || old.server != url) {
               old.scrapbook = null;
               old.playerName = kvs.ownplayername;
               old.server = url;
+              old.attributes = attributes;
             }
           }
-          console.log("updating to:");
-          console.log(old);
           await chrome.storage.local.set({ [STORAGE_KEY]: old });
         }
       }
@@ -90,14 +85,8 @@ chrome.runtime.onMessage.addListener((msg, _) => {
           return
         };
         stored.scrapbook = kvs.scrapbook;
-        console.log("Scrapbook Storing:");
-        console.log(stored);
         await chrome.storage.local.set({ [STORAGE_KEY]: stored });
-        // chrome.runtime.sendMessage({ type: "NEW_SCRAPBOOK" });
       }
-      const xxx = (await chrome.storage.local.get(STORAGE_KEY))[STORAGE_KEY];
-      console.log(xxx)
-
     } catch (err) {
       console.error("Error handling sf capture:", err);
     }

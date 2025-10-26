@@ -5,22 +5,148 @@
   <title>Scrapbook Advice</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
-    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin: 12px; width: 420px;}
-    h1 { font-size: 16px; margin: 0 0 8px; }
-    .item { border: 1px solid #ddd; padding: 8px; margin-bottom: 8px; border-radius: 6px; background: #fafafa; }
-    .meta { font-size: 12px; color: #555; margin-bottom: 6px; }
-    pre { white-space: pre-wrap; word-break: break-word; max-height: 160px; overflow: auto; background:#fff;padding:8px;border-radius:4px;border:1px solid #eee;}
-    button { margin-right:8px; }
-    .controls { margin-bottom:8px; display:flex; gap:8px; }
-    .no-items { color:#666; font-size:13px; }
+    :root {
+      --color-gray100: #9e9eb1;
+      --color-gray200: #848588;
+      --color-gray300: #676678;
+      --color-gray400: #31313c;
+      --color-gray500: #282830;
+      --color-gray600: #1c1c1f;
+      --color-text: white;
+      --color-yellow: #efbb49;
+      --color-blue: #5383e8;
+    }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      margin: 0;
+      width: 420px;
+      background-color: var(--color-gray600);
+      color: var(--color-text);
+    }
+    h1 {
+      font-size: 18px;
+      margin: 0;
+      padding: 12px;
+      background-color: var(--color-gray500);
+    }
+    .container {
+      padding: 12px;
+    }
+    .player-info {
+      margin-bottom: 12px;
+    }
+    .player-info .username {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .player-info .server {
+      font-size: 12px;
+      color: var(--color-gray100);
+    }
+    .controls {
+      margin-bottom: 12px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .attributes label {
+      font-size: 14px;
+    }
+    .attributes input {
+      width: 60px;
+      padding: 4px;
+      border-radius: 4px;
+      border: 1px solid var(--color-gray300);
+      background-color: var(--color-gray400);
+      color: var(--color-text);
+    }
+    #list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px;
+      background-color: var(--color-gray500);
+      font-weight: bold;
+      border-radius: 6px;
+    }
+    .list-header .name {
+      flex: 1;
+    }
+    .list-header .new-items {
+      width: 100px;
+      text-align: center;
+    }
+    .list-header .copy {
+      width: 60px;
+    }
+    .item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+      background-color: var(--color-gray400);
+      border-radius: 6px;
+    }
+    .item .name {
+      flex: 1;
+      font-weight: 600;
+    }
+    .item .new-items {
+      width: 100px;
+      text-align: center;
+    }
+    .item .copy button {
+      padding: 4px 8px;
+      border: none;
+      background-color: var(--color-blue);
+      color: var(--color-text);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .item .copy button:hover {
+      background-color: var(--color-yellow);
+    }
+    .no-items {
+      color: var(--color-gray200);
+      font-size: 13px;
+      padding: 12px;
+      text-align: center;
+    }
+    button {
+      padding: 6px 12px;
+      border: none;
+      background-color: var(--color-blue);
+      color: var(--color-text);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: var(--color-yellow);
+    }
   </style>
 </head>
 <body>
   <h1>Scrapbook Advice</h1>
-  <div class="controls">
-    <button id="refresh">Refresh</button>
+  <div class="container">
+    <div id="player-info" class="player-info"></div>
+    <div class="controls">
+      <button id="refresh">Refresh</button>
+      <div class="attributes">
+        <label for="max-attrs">Max Attrs:</label>
+        <input type="number" id="max-attrs" />
+      </div>
+    </div>
+    <div class="list-header">
+      <div class="name">Name</div>
+      <div class="new-items">New Items</div>
+      <div class="copy"></div>
+    </div>
+    <div id="list"></div>
   </div>
-  <div id="list"></div>
   <script src="popup.js"></script>
 </body>
 </html>
