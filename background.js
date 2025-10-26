@@ -1,12 +1,9 @@
-// background.js
-const MF_ENDPOINT = "https://mfbot.marenga.dev/scrapbook_advice";
-
 // Storage key for saved items
 // @ts-ignore
 const STORAGE_KEY = "scrapbook_data";
 
 /**
- * @typedef {object} ScrapbookAdvice
+ * @typedef {object} PlayerData
  * @property {string} playerName The name of the player, that this advice was made for
  * @property {string} server The base url (https://f8...net) of the server,
  * that the player is playing on
@@ -15,7 +12,6 @@ const STORAGE_KEY = "scrapbook_data";
  * player has not looked at that yet (i.e the game client has not requested
  * that yet), this will be null
  */
-
 
 /**
  * @typedef {object} SFCaptureMessage
@@ -51,12 +47,12 @@ chrome.runtime.onMessage.addListener((msg, _) => {
       if ("ownplayersave" in kvs) {
         const attributes = kvs.ownplayersave.split("/").slice(30, 40).map(Number).reduce((a, b) => a + b, 0);        
 
-        /** @type {ScrapbookAdvice|null} */
+        /** @type {PlayerData|null} */
         const old = (await chrome.storage.local.get(STORAGE_KEY))[STORAGE_KEY];
         if (!old) {
           if ("ownplayername" in kvs) {
             // Insert a fully new one 
-            /** @type {ScrapbookAdvice} */
+            /** @type {PlayerData} */
             const playerData = {
               playerName: kvs.ownplayername,
               server: url,
@@ -82,7 +78,7 @@ chrome.runtime.onMessage.addListener((msg, _) => {
       }
 
       if ("scrapbook" in kvs) {
-        /** @type {ScrapbookAdvice|null} */
+        /** @type {PlayerData|null} */
         const stored = (await chrome.storage.local.get(STORAGE_KEY))[STORAGE_KEY];
 
         if (!stored) {
