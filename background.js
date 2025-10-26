@@ -84,8 +84,15 @@ chrome.runtime.onMessage.addListener((msg, _) => {
           console.warn("Captured scrapbook before player state");
           return
         };
-        stored.scrapbook = kvs.scrapbook;
-        await chrome.storage.local.set({ [STORAGE_KEY]: stored });
+        if (stored.scrapbook != kvs.scrapbook) {
+          stored.scrapbook = kvs.scrapbook;
+          await chrome.storage.local.set({ [STORAGE_KEY]: stored });
+          try {
+            chrome.runtime.sendMessage({type: "NEW_SCRAPBOOK"})
+          } catch (error) {
+            
+          }
+        }
       }
     } catch (err) {
       console.error("Error handling sf capture:", err);

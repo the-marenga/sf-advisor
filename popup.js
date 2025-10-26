@@ -25,11 +25,18 @@ const MF_ENDPOINT = "https://mfbot-api.marenga.dev/scrapbook_advice";
  */
 async function getBestEnemies(scrapbook, server, max_attrs) {
   try {
+    const startTime = Date.now();
     const res = await fetch(MF_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ raw_scrapbook: scrapbook, server, max_attrs })
     });
+    const duration = Date.now() - startTime;
+    if (duration < 300) {
+      // Requests can be so fast, that it is hard to tell, when this is 
+      // actually fetched otherwise
+      await new Promise(resolve => setTimeout(resolve, 300 - duration));
+    }
     const json = await res.json();
     return { ok: true, players: json };
   } catch (err) {
@@ -71,7 +78,7 @@ function render() {
       listEl.innerHTML = `<div class="no-items">No player data</div>`;
       return;
     }
-    maxAttrsInput.value = "" + (advice.attributes || 10);
+    maxAttrsInput.value = "" + advice.attributes;
 
     if (advice.playerName && advice.server) {
       const usernameDiv = document.createElement("div");
@@ -89,7 +96,7 @@ function render() {
       return;
     }
 
-    listEl.innerHTML = `<div class="no-items">Loading...</div>`;
+    listEl.innerHTML = `<div class="spinner"></div>`;
 
     getBestEnemies(advice.scrapbook, advice.server, advice.attributes).then(a => {
       listEl.innerHTML = "";
