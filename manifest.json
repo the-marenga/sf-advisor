@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "S&F Scrapbook Advisor",
+  "name": "S&F Advisor",
   "version": "1.0",
   "description": "Helps you fill the scrapbook in Shakes and Fidget by showing you the players with the most items, that you have not found yet",
-  "permissions": ["storage", "scripting", "activeTab", "webRequest"],
+  "permissions": ["storage", "webRequest"],
   "host_permissions": [
     "*://sfgame.net/*",
     "*://*.sfgame.net/*",
@@ -14,7 +14,7 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Scrapbook Advisor"
+    "default_title": "S&F Advisor"
   },
   "content_scripts": [
     {

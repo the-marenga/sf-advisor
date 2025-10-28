@@ -88,7 +88,7 @@ chrome.runtime.onMessage.addListener((msg, _) => {
           stored.scrapbook = kvs.scrapbook;
           await chrome.storage.local.set({ [STORAGE_KEY]: stored });
           try {
-            chrome.runtime.sendMessage({type: "NEW_SCRAPBOOK"})
+            await chrome.runtime.sendMessage({type: "NEW_SCRAPBOOK"})
           } catch (error) {
             
           }

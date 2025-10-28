@@ -69,7 +69,6 @@ function render() {
   chrome.storage.local.get(STORAGE_KEY).then(res => {
     /** @type {PlayerData|null} */
     const advice = res[STORAGE_KEY];
-
     listEl.innerHTML = "";
     playerInfoEl.innerHTML = "";
 
