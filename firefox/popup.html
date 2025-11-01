@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>S&F Advisor</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root {
+      --color-gray100: #9e9eb1;
+      --color-gray200: #848588;
+      --color-gray300: #676678;
+      --color-gray400: #31313c;
+      --color-gray500: #282830;
+      --color-gray600: #1c1c1f;
+      --color-text: white;
+      --color-yellow: #efbb49;
+      --color-blue: #5383e8;
+    }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      margin: 0;
+      width: 420px;
+      height: 600px;
+      background-color: var(--color-gray600);
+      color: var(--color-text);
+      display: flex;
+      flex-direction: column;
+    }
+    h1 {
+      font-size: 18px;
+      margin: 0;
+      padding: 12px;
+      background-color: var(--color-gray500);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .container {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+    }
+    .player-info {
+      margin-bottom: 12px;
+    }
+    .player-info .username {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .player-info .server {
+      font-size: 12px;
+      color: var(--color-gray100);
+    }
+    .controls {
+      margin-bottom: 12px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .attributes {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .attributes label {
+      font-size: 14px;
+    }
+    .attributes input {
+      width: 60px;
+      padding: 4px;
+      border-radius: 4px;
+      border: 1px solid var(--color-gray300);
+      background-color: var(--color-gray400);
+      color: var(--color-text);
+    }
+    #list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px;
+      background-color: var(--color-gray500);
+      font-weight: bold;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+    .list-header .name {
+      flex: 1;
+    }
+    .list-header .new-items {
+      width: 100px;
+      text-align: center;
+    }
+    .list-header .copy {
+      width: 60px;
+    }
+    .item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+      background-color: var(--color-gray400);
+      border-radius: 6px;
+    }
+    .item .name {
+      flex: 1;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .item .new-items {
+      width: 100px;
+      text-align: center;
+    }
+    .copy-icon {
+      cursor: pointer;
+      font-size: 18px !important;;
+    }
+    .copy-icon.clicked {
+      color: var(--color-yellow);
+    }
+    .help-icon {
+      cursor: help;
+      font-size: 18px !important;;
+    }
+    .refresh-icon {
+      font-size: 18px !important;
+    }
+    .no-items {
+      color: var(--color-gray200);
+      font-size: 13px;
+      padding: 12px;
+      text-align: center;
+    }
+    button {
+      padding: 6px 12px;
+      border: none;
+      background-color: var(--color-blue);
+      color: var(--color-text);
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    button:hover {
+      background-color: #a9c2f5;
+    }
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border-left-color: var(--color-blue);
+      animation: spin 1s ease infinite;
+      margin: 20px auto;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined&display=swap" rel="stylesheet">
+</head>
+<body>
+  <h1>
+    <span>S&F Advisor</span>
+    <a href='https://ko-fi.com/J3J0ULD4J' target='_blank'><img height='28' style='border:0px;height:28px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+  </h1>
+  <div class="container">
+    <div id="player-info" class="player-info"></div>
+    <div class="controls">
+      <div class="attributes">
+        <label for="max-attrs">Max Attributes</label>
+        <input type="number" id="max-attrs" />
+        <i class="material-icons-outlined help-icon" title="Only consider enemies, that have at most this many total attributes (The sum of strength, dexterity, etc.)">help_outline</i>
+      </div>
+      <button id="refresh"><i class="material-icons-outlined refresh-icon">refresh</i>Refresh</button>
+    </div>
+    <div class="list-header">
+      <div class="name">Name</div>
+      <div class="new-items">New Items</div>
+    </div>
+    <div id="list"></div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
