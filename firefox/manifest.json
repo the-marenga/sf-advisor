@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "S&F Advisor",
-  "version": "1.0",
+  "version": "1.1",
   "description": "Helps you fill the scrapbook in Shakes and Fidget by showing you the players with the most items, that you have not found yet",
   "permissions": [
     "storage",
