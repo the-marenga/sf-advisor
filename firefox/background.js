@@ -42,8 +42,10 @@ browser.runtime.onMessage.addListener((msg, _) => {
         kvs[key.split(".")[0]] = value;
       }
 
-      if ("ownplayersave" in kvs) {
-        const attributes = kvs.ownplayersave.split("/").slice(30, 40).map(Number).reduce((a, b) => a + b, 0);        
+      // The game API renamed "ownplayersave" to "ownplayersavecharacter"; support both for backwards compatibility.
+      const ownplayersaveKey = ["ownplayersavecharacter", "ownplayersave"].find(k => k in kvs) ?? null;
+      if (ownplayersaveKey) {
+        const attributes = kvs[ownplayersaveKey].split("/").slice(30, 40).map(Number).reduce((a, b) => a + b, 0);        
 
         /** @type {PlayerData|null} */
         const old = (await browser.storage.local.get(STORAGE_KEY))[STORAGE_KEY];
