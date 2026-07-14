@@ -3,7 +3,8 @@
     "target": "es2017",
     "module": "es2022",
     "checkJs": true,
-    "strict": true
+    "strict": true,
+    "types": ["firefox-webext-browser"]
   },
   "include": [
     "**/*.js"

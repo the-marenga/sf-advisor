@@ -13,6 +13,33 @@ const refreshBtn = document.getElementById("refresh");
 /** @type {HTMLInputElement} */
 // @ts-ignore
 const maxAttrsInput = document.getElementById("max-attrs");
+/** @type {HTMLInputElement} */
+// @ts-ignore
+const maxLevelInput = document.getElementById("max-level");
+/** @type {NodeListOf<HTMLInputElement>} */
+// @ts-ignore
+const classCheckboxes = document.querySelectorAll(".class-filter input[type='checkbox']");
+
+/**
+ * @returns {string[]}
+ */
+function getSelectedClasses() {
+  /** @type {string[]} */
+  const selected = [];
+  classCheckboxes.forEach(cb => {
+    if (cb.checked) selected.push(cb.value);
+  });
+  return selected;
+}
+
+/**
+ * @param {string[]} classes
+ */
+function setSelectedClasses(classes) {
+  classCheckboxes.forEach(cb => {
+    cb.checked = classes.includes(cb.value);
+  });
+}
 
 // background.js
 const MF_ENDPOINT = "https://mfbot-api.marenga.dev/scrapbook_advice";
@@ -20,16 +47,29 @@ const MF_ENDPOINT = "https://mfbot-api.marenga.dev/scrapbook_advice";
 /**
  * @param {string} scrapbook
  * @param {string} server
- * @param {number} max_attrs
+ * @param {number|null} max_attrs
+ * @param {string[]|null} class_filter
+ * @param {number|null} max_level
  * @returns {Promise<{ok: true, players: ScrapbookAdvice[]} | {ok: false, error: string}>}
  */
-async function getBestEnemies(scrapbook, server, max_attrs) {
+async function getBestEnemies(scrapbook, server, max_attrs, class_filter, max_level) {
   try {
     const startTime = Date.now();
+    /** @type {Record<string, any>} */
+    const body = { raw_scrapbook: scrapbook, server };
+    if (max_attrs != null) {
+      body.max_attrs = max_attrs;
+    }
+    if (class_filter && class_filter.length > 0) {
+      body.class_filter = class_filter;
+    }
+    if (max_level != null) {
+      body.max_level = max_level;
+    }
     const res = await fetch(MF_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ raw_scrapbook: scrapbook, server, max_attrs })
+      body: JSON.stringify(body)
     });
     const duration = Date.now() - startTime;
     if (duration < 300) {
@@ -48,6 +88,8 @@ async function getBestEnemies(scrapbook, server, max_attrs) {
  * @typedef {object} ScrapbookAdvice
  * @property {string} player_name
  * @property {string} new_count
+ * @property {number} [level]
+ * @property {string} [class]
  */
 
 /**
@@ -77,7 +119,11 @@ function render() {
       listEl.innerHTML = `<div class="no-items">No player data</div>`;
       return;
     }
-    maxAttrsInput.value = "" + advice.attributes;
+    maxAttrsInput.value = advice.maxAttrsFilter != null ? "" + advice.maxAttrsFilter : "";
+    maxLevelInput.value = advice.maxLevel != null ? "" + advice.maxLevel : "";
+    if (advice.classFilter) {
+      setSelectedClasses(advice.classFilter);
+    }
 
     if (advice.playerName && advice.server) {
       const usernameDiv = document.createElement("div");
@@ -97,7 +143,10 @@ function render() {
 
     listEl.innerHTML = `<div class="spinner"></div>`;
 
-    getBestEnemies(advice.scrapbook, advice.server, advice.attributes).then(a => {
+    const maxAttrs = maxAttrsInput.value ? parseInt(maxAttrsInput.value, 10) : null;
+    const classFilter = getSelectedClasses();
+    const maxLevel = maxLevelInput.value ? parseInt(maxLevelInput.value, 10) : null;
+    getBestEnemies(advice.scrapbook, advice.server, maxAttrs, classFilter.length > 0 ? classFilter : null, maxLevel).then(a => {
       listEl.innerHTML = "";
       if (a.ok) {
         for (const player of a.players) {
@@ -118,11 +167,21 @@ function render() {
           nameSpan.textContent = player.player_name;
           nameDiv.appendChild(nameSpan);
 
+          const levelDiv = document.createElement("div");
+          levelDiv.className = "level";
+          levelDiv.textContent = player.level != null ? "" + player.level : "-";
+
+          const classDiv = document.createElement("div");
+          classDiv.className = "class";
+          classDiv.textContent = player.class || "-";
+
           const newItemsDiv = document.createElement("div");
           newItemsDiv.className = "new-items";
           newItemsDiv.textContent = player.new_count;
 
           itemDiv.appendChild(nameDiv);
+          itemDiv.appendChild(levelDiv);
+          itemDiv.appendChild(classDiv);
           itemDiv.appendChild(newItemsDiv);
           listEl.appendChild(itemDiv);
         }
@@ -137,16 +196,22 @@ refreshBtn.addEventListener("click", render);
 
 document.addEventListener("DOMContentLoaded", render);
 
-maxAttrsInput.addEventListener("input", () => {
-  const maxAtrs = parseInt(maxAttrsInput.value, 10);
-  if (!isNaN(maxAtrs)) {
-    browser.storage.local.get(STORAGE_KEY, (res) => {
-      const advice = res[STORAGE_KEY] || {};
-      advice.attributes = maxAtrs;
-      browser.storage.local.set({ [STORAGE_KEY]: advice });
-    });
-  }
-});
+function saveFilters() {
+  const maxAttrs = maxAttrsInput.value ? parseInt(maxAttrsInput.value, 10) : null;
+  const maxLevel = maxLevelInput.value ? parseInt(maxLevelInput.value, 10) : null;
+  const classFilter = getSelectedClasses();
+  browser.storage.local.get(STORAGE_KEY, (res) => {
+    const advice = res[STORAGE_KEY] || {};
+    advice.maxAttrsFilter = maxAttrs;
+    advice.maxLevel = maxLevel;
+    advice.classFilter = classFilter.length > 0 ? classFilter : undefined;
+    browser.storage.local.set({ [STORAGE_KEY]: advice });
+  });
+}
+
+maxAttrsInput.addEventListener("input", saveFilters);
+maxLevelInput.addEventListener("input", saveFilters);
+classCheckboxes.forEach(cb => cb.addEventListener("change", saveFilters));
 
 // Listen for realtime updates from background
 /**

@@ -11,6 +11,9 @@ const STORAGE_KEY = "scrapbook_data";
  * @property {string|null} scrapbook the raw (encoded) scrapbook string. If the
  * player has not looked at that yet (i.e the game client has not requested
  * that yet), this will be null
+ * @property {number|null} [maxAttrsFilter] Optional saved max attributes filter
+ * @property {number|null} [maxLevel] Optional saved max level filter
+ * @property {string[]|undefined} [classFilter] Optional saved class filter
  */
 
 /**
