@@ -173,10 +173,11 @@
     white-space: nowrap;
     cursor: pointer;
     user-select: none;
+    width: 95px;
   }
 
   .filter-row input[type="number"] {
-    width: 60px;
+    width: 90px;
     padding: 3px 4px;
     border-radius: 4px;
     border: 1px solid var(--color-gray300);
