@@ -230,11 +230,13 @@
   .list-header {
     display: flex;
     justify-content: space-between;
-    padding: 8px;
-    background-color: var(--color-gray500);
-    font-weight: bold;
-    border-radius: 6px;
-    margin-bottom: 8px;
+    padding: 5px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-gray200);
+    margin-bottom: 4px;
   }
 
   .list-header .name {
@@ -242,17 +244,17 @@
   }
 
   .list-header .level {
-    width: 50px;
+    width: 36px;
     text-align: center;
   }
 
   .list-header .class {
-    width: 70px;
+    width: 72px;
     text-align: center;
   }
 
   .list-header .new-items {
-    width: 100px;
+    width: 70px;
     text-align: center;
   }
 

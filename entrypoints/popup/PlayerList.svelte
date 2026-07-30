@@ -37,9 +37,22 @@
   .list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 5px;
     overflow-y: auto;
     flex: 1;
+  }
+
+  .list::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .list::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .list::-webkit-scrollbar-thumb {
+    background: var(--color-gray300);
+    border-radius: 3px;
   }
 
   .no-items {

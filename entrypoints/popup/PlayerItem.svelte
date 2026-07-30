@@ -41,10 +41,10 @@
       onclick={copyToClipboard}
       onkeydown={handleKeydown}
     >content_copy</i>
-    <span>{player.player_name}</span>
+    <span class="player-name">{player.player_name}</span>
   </div>
   <div class="level">{player.level != null ? player.level : "-"}</div>
-  <div class="class">{player.class || "-"}</div>
+  <div class="class">{player.class ? player.class : "-"}</div>
   <div class="new-items">{player.new_count}</div>
 </div>
 
@@ -53,9 +53,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px;
+    padding: 7px 8px;
     background-color: var(--color-gray400);
     border-radius: 6px;
+    transition: background-color 0.15s;
+  }
+
+  .item:hover {
+    background-color: #383844;
   }
 
   .name {
@@ -63,30 +68,53 @@
     font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .player-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .level {
-    width: 50px;
+    width: 36px;
     text-align: center;
     font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-gray100);
   }
 
   .class {
-    width: 70px;
+    width: 72px;
     text-align: center;
-    font-size: 13px;
+    font-size: 11px;
     text-transform: capitalize;
+    color: var(--color-gray100);
+    background-color: var(--color-gray600);
+    padding: 2px 6px;
+    border-radius: 10px;
   }
 
   .new-items {
-    width: 100px;
+    width: 70px;
     text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-blue);
   }
 
   .copy-icon {
     cursor: pointer;
-    font-size: 18px !important;
+    font-size: 16px !important;
+    color: var(--color-gray200);
+    transition: color 0.15s;
+    flex-shrink: 0;
+  }
+
+  .copy-icon:hover {
+    color: var(--color-text);
   }
 
   .copy-icon.clicked {
