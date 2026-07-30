@@ -165,9 +165,9 @@
   .class-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 4px;
-    margin-bottom: 12px;
-    padding: 8px;
+    gap: 2px;
+    margin-bottom: 10px;
+    padding: 6px;
     background-color: var(--color-gray500);
     border-radius: 6px;
   }
@@ -175,8 +175,8 @@
   .class-filter {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 6px;
+    gap: 4px;
+    padding: 2px 4px;
     border-radius: 4px;
   }
 
