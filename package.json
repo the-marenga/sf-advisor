@@ -14,7 +14,7 @@
     "zip:chrome": "wxt zip --browser chrome",
     "zip:firefox": "wxt zip --browser firefox",
     "compile": "wxt prepare",
-    "postinstall": "wxt prepare || true",
+    "postinstall": "wxt prepare",
     "check": "svelte-check --tsconfig tsconfig.json && tsc --noEmit"
   },
   "devDependencies": {

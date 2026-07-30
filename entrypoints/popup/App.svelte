@@ -189,6 +189,10 @@
   {/if}
 </div>
 
+<div class="privacy-footer">
+  Scrapbook data is sent to mfbot-api.marenga.dev only to compute recommendations and is not stored.
+</div>
+
 <style>
   :global(body) {
     font-family:
@@ -303,5 +307,14 @@
 
   .empty-desc a:hover {
     text-decoration: underline;
+  }
+
+  .privacy-footer {
+    padding: 8px 12px;
+    font-size: 10px;
+    color: var(--color-gray200);
+    text-align: center;
+    border-top: 1px solid var(--color-gray400);
+    flex-shrink: 0;
   }
 </style>
