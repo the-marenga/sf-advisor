@@ -20,6 +20,8 @@
   "devDependencies": {
     "@types/webextension-polyfill": "^0.12.3",
     "@wxt-dev/module-svelte": "^2.0.3",
+    "prettier": "^3.9.6",
+    "prettier-plugin-svelte": "^4.1.1",
     "svelte": "^5.28.0",
     "svelte-check": "^4.7.4",
     "typescript": "^5.8.3",

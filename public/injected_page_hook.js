@@ -5,7 +5,7 @@
 (function () {
   const ORIG = {
     fetch: window.fetch,
-    XMLHttpRequest: window.XMLHttpRequest
+    XMLHttpRequest: window.XMLHttpRequest,
   };
 
   /**
@@ -14,11 +14,14 @@
    */
   function trySend(url, body) {
     try {
-      window.postMessage({
-        source: "EXT_SF_PAGE_HOOK",
-        url,
-        body,
-      }, "*");
+      window.postMessage(
+        {
+          source: "EXT_SF_PAGE_HOOK",
+          url,
+          body,
+        },
+        "*",
+      );
     } catch (e) {
       // ignore
       console.warn("postMessage fail", e);
@@ -34,14 +37,19 @@
         const cloned = resp.clone();
 
         // read text if response seems textual or application/json
-        cloned.text().then(text => {
-          try {
-            const url = String(args[0]);
-            if (/cmd.php/i.test(url)) {
-              trySend(url.split("cmd.php")[0], text);
+        cloned
+          .text()
+          .then((text) => {
+            try {
+              const url = String(args[0]);
+              if (/cmd.php/i.test(url)) {
+                trySend(url.split("cmd.php")[0], text);
+              }
+            } catch (e) {
+              console.warn(e);
             }
-          } catch (e) { console.warn(e) }
-        }).catch(() => { });
+          })
+          .catch(() => {});
         return resp;
       } catch (err) {
         // if fetch failed, propagate
@@ -71,8 +79,8 @@
       xhr.addEventListener("load", function () {
         try {
           if (url && /cmd\.php/i.test(url)) {
-            try { 
-              const text = xhr.responseText; 
+            try {
+              const text = xhr.responseText;
               trySend(url, text);
             } catch (e) {}
           }
@@ -86,5 +94,4 @@
     HookedXHR.prototype = ORIG.XMLHttpRequest.prototype;
     window.XMLHttpRequest = HookedXHR;
   })();
-
 })();

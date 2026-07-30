@@ -77,9 +77,8 @@
 
   function handleClassToggle(cls: string) {
     const idx = selectedClasses.indexOf(cls);
-    const updated = idx === -1
-      ? [...selectedClasses, cls]
-      : selectedClasses.filter((c) => c !== cls);
+    const updated =
+      idx === -1 ? [...selectedClasses, cls] : selectedClasses.filter((c) => c !== cls);
     onFilterChange({
       maxAttrs: attrsEnabled && maxAttrsValue ? parseInt(maxAttrsValue, 10) : null,
       maxLevel: levelEnabled && maxLevelValue ? parseInt(maxLevelValue, 10) : null,
@@ -89,10 +88,14 @@
 
   function labelFor(cls: string): string {
     switch (cls) {
-      case "BattleMage": return "Battle Mage";
-      case "DemonHunter": return "Demon Hunter";
-      case "PlagueDoctor": return "Plague Doctor";
-      default: return cls;
+      case "BattleMage":
+        return "Battle Mage";
+      case "DemonHunter":
+        return "Demon Hunter";
+      case "PlagueDoctor":
+        return "Plague Doctor";
+      default:
+        return cls;
     }
   }
 
@@ -101,12 +104,7 @@
 
 <div class="filters-column">
   <div class="filter-row">
-    <input
-      type="checkbox"
-      id="chk-level"
-      checked={levelEnabled}
-      onchange={toggleLevel}
-    />
+    <input type="checkbox" id="chk-level" checked={levelEnabled} onchange={toggleLevel} />
     <label for="chk-level" class="filter-label">Max Level</label>
     <input
       id="max-level"
@@ -122,12 +120,7 @@
   </div>
 
   <div class="filter-row">
-    <input
-      type="checkbox"
-      id="chk-attrs"
-      checked={attrsEnabled}
-      onchange={toggleAttrs}
-    />
+    <input type="checkbox" id="chk-attrs" checked={attrsEnabled} onchange={toggleAttrs} />
     <label for="chk-attrs" class="filter-label">Max Attributes</label>
     <input
       id="max-attrs"
@@ -137,16 +130,16 @@
       onblur={clampInput}
       disabled={!attrsEnabled}
     />
-    <span title="Only consider enemies, that have at most this many total attributes (The sum of strength, dexterity, etc.)" class="help-icon">
+    <span
+      title="Only consider enemies, that have at most this many total attributes (The sum of strength, dexterity, etc.)"
+      class="help-icon"
+    >
       <HelpCircle size={16} />
     </span>
   </div>
 </div>
 
-<button
-  class="class-toggle"
-  onclick={() => (showClasses = !showClasses)}
->
+<button class="class-toggle" onclick={() => (showClasses = !showClasses)}>
   {#if showClasses}
     <ChevronUp size={18} />
   {:else}

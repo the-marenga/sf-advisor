@@ -18,8 +18,11 @@ jobs:
 
       - run: npm ci
 
-      - name: Type check
-        run: npx tsc --noEmit
+      - name: Check (svelte-check + tsc)
+        run: npm run check
+
+      - name: Format check
+        run: npx prettier --check .
 
       - name: Build (Chrome)
         run: npm run build:chrome

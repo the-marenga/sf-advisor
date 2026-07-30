@@ -18,14 +18,17 @@
   }
 
   function copyToClipboard() {
-    navigator.clipboard.writeText(player.player_name).then(() => {
-      clicked = true;
-      setTimeout(() => {
-        clicked = false;
-      }, 500);
-    }).catch((err) => {
-      console.error("Failed to copy text: ", err);
-    });
+    navigator.clipboard
+      .writeText(player.player_name)
+      .then(() => {
+        clicked = true;
+        setTimeout(() => {
+          clicked = false;
+        }, 500);
+      })
+      .catch((err) => {
+        console.error("Failed to copy text: ", err);
+      });
   }
 
   function handleKeydown(e: KeyboardEvent) {

@@ -8,11 +8,7 @@ export default defineConfig({
     description:
       "Helps you fill the scrapbook in Shakes and Fidget by showing you the players with the most items, that you have not found yet",
     permissions: ["storage", "webRequest"],
-    host_permissions: [
-      "*://sfgame.net/*",
-      "*://*.sfgame.net/*",
-      "https://mfbot-api.marenga.dev/*",
-    ],
+    host_permissions: ["*://sfgame.net/*", "*://*.sfgame.net/*", "https://mfbot-api.marenga.dev/*"],
     web_accessible_resources: [
       {
         resources: ["injected_page_hook.js"],

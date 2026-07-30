@@ -3,20 +3,10 @@
   import Filters from "./Filters.svelte";
   import PlayerList from "./PlayerList.svelte";
   import { BookOpenText, Compass } from "lucide-svelte";
+  import type { PlayerData } from "../../types/player-data";
 
   const STORAGE_KEY = "scrapbook_data";
   const MF_ENDPOINT = "https://mfbot-api.marenga.dev/scrapbook_advice";
-
-  interface PlayerData {
-    playerName: string;
-    server: string;
-    level: number;
-    attributes: number;
-    scrapbook: string | null;
-    maxAttrsFilter?: number | null;
-    maxLevel?: number | null;
-    classFilter?: string[] | undefined;
-  }
 
   interface ScrapbookAdvice {
     player_name: string;
@@ -36,9 +26,18 @@
   let selectedClasses = $state<string[]>([]);
 
   const CLASSES = [
-    "Assassin", "Bard", "BattleMage", "Berserker",
-    "DemonHunter", "Druid", "Mage", "Necromancer",
-    "Paladin", "PlagueDoctor", "Scout", "Warrior",
+    "Assassin",
+    "Bard",
+    "BattleMage",
+    "Berserker",
+    "DemonHunter",
+    "Druid",
+    "Mage",
+    "Necromancer",
+    "Paladin",
+    "PlagueDoctor",
+    "Scout",
+    "Warrior",
   ] as const;
 
   async function loadData() {
@@ -102,7 +101,11 @@
     fetchAdvice();
   }
 
-  function handleFilterChange(opts: { maxAttrs: number | null; maxLevel: number | null; selectedClasses: string[] }) {
+  function handleFilterChange(opts: {
+    maxAttrs: number | null;
+    maxLevel: number | null;
+    selectedClasses: string[];
+  }) {
     maxAttrs = opts.maxAttrs;
     maxLevel = opts.maxLevel;
     selectedClasses = opts.selectedClasses;
@@ -166,7 +169,10 @@
       <div class="empty-state">
         <BookOpenText size={48} style="color: var(--color-gray300); margin-bottom: 8px;" />
         <p class="empty-title">No scrapbook data yet</p>
-        <p class="empty-desc">Keep playing — the extension will capture your scrapbook data as soon as the game sends it.</p>
+        <p class="empty-desc">
+          Keep playing — the extension will capture your scrapbook data as soon as the game sends
+          it.
+        </p>
       </div>
     {/if}
   {:else}
@@ -175,8 +181,9 @@
       <p class="empty-title">Welcome to S&amp;F Advisor!</p>
       <p class="empty-desc">
         Open
-        <a href="https://sfgame.net" target="_blank" rel="noopener noreferrer">sfgame.net</a>,
-        log in with your character, and play the game. The extension will detect your character automatically.
+        <a href="https://sfgame.net" target="_blank" rel="noopener noreferrer">sfgame.net</a>, log
+        in with your character, and play the game. The extension will detect your character
+        automatically.
       </p>
     </div>
   {/if}
@@ -188,7 +195,13 @@
   }
 
   :global(body) {
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    font-family:
+      system-ui,
+      -apple-system,
+      "Segoe UI",
+      Roboto,
+      "Helvetica Neue",
+      Arial;
     margin: 0;
     width: 420px;
     height: 600px;

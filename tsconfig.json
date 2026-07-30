@@ -10,6 +10,7 @@
     "entrypoints/**/*.ts",
     "entrypoints/**/*.svelte",
     "wxt.config.ts",
-    ".wxt/wxt.d.ts"
+    ".wxt/wxt.d.ts",
+    "types/**/*.ts"
   ]
 }
