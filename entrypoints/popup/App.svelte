@@ -45,7 +45,7 @@
     const data = res[STORAGE_KEY] as PlayerData | undefined;
     if (data) {
       playerData = data;
-      maxAttrs = data.maxAttrsFilter ?? null;
+      maxAttrs = data.maxAttrsFilter ?? (data.attributes ? data.attributes : null);
       maxLevel = data.maxLevel ?? (data.level ? data.level + 5 : null);
       selectedClasses = data.classFilter ?? [];
     }
