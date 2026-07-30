@@ -174,12 +174,8 @@
       <p class="empty-desc">
         Open
         <a href="https://sfgame.net" target="_blank" rel="noopener noreferrer">sfgame.net</a>,
-        log in with your character, and then refresh this popup.
+        log in with your character, and open the scrapbook in-game. The extension will detect it automatically.
       </p>
-      <button onclick={handleRefresh} class="empty-btn">
-        <i class="material-icons-outlined refresh-icon">refresh</i>
-        Refresh
-      </button>
     </div>
   {/if}
 </div>
