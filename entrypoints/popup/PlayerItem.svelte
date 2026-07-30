@@ -72,7 +72,6 @@
 
   .name {
     flex: 1;
-    font-weight: 600;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -89,7 +88,6 @@
     width: 36px;
     text-align: center;
     font-size: 14px;
-    font-weight: 700;
     font-variant-numeric: tabular-nums;
     color: var(--color-text);
   }
@@ -98,9 +96,8 @@
     width: 80px;
     text-align: center;
     font-size: 11px;
-    font-weight: 600;
-    color: var(--color-blue);
-    background-color: color-mix(in srgb, var(--color-blue) 12%, transparent);
+    color: var(--color-text);
+    background-color: var(--color-gray300);
     padding: 2px 4px;
     border-radius: 10px;
     overflow: hidden;
