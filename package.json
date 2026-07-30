@@ -1,0 +1,32 @@
+{
+  "name": "sf-advisor",
+  "version": "1.2.0",
+  "description": "Helps you fill the scrapbook in Shakes and Fidget by showing you the players with the most items, that you have not found yet",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "dev:firefox": "wxt --browser firefox",
+    "build": "wxt build",
+    "build:chrome": "wxt build --browser chrome",
+    "build:firefox": "wxt build --browser firefox",
+    "zip": "wxt zip",
+    "zip:chrome": "wxt zip --browser chrome",
+    "zip:firefox": "wxt zip --browser firefox",
+    "compile": "wxt prepare",
+    "postinstall": "wxt prepare",
+    "check": "svelte-check --tsconfig tsconfig.json && tsc --noEmit"
+  },
+  "devDependencies": {
+    "@wxt-dev/module-svelte": "^2.0.3",
+    "prettier": "^3.9.6",
+    "prettier-plugin-svelte": "^4.1.1",
+    "svelte": "^5.28.0",
+    "svelte-check": "^4.7.4",
+    "typescript": "~6.0.0",
+    "wxt": "^0.21.2"
+  },
+  "dependencies": {
+    "@lucide/svelte": "^1.0.0"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "extends": "./.wxt/tsconfig.json",
+  "compilerOptions": {
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "verbatimModuleSyntax": true
+  },
+  "include": [
+    "entrypoints/**/*.ts",
+    "entrypoints/**/*.svelte",
+    "wxt.config.ts",
+    ".wxt/wxt.d.ts",
+    "types/**/*.ts"
+  ]
+}
