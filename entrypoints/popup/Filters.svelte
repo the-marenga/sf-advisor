@@ -35,21 +35,38 @@
   const attrsEnabled = $derived(maxAttrs != null);
   const levelEnabled = $derived(maxLevel != null);
 
+  function parseValue(val: string): number | null {
+    if (!val) return null;
+    const n = parseInt(val, 10);
+    return isNaN(n) || n < 0 ? null : n;
+  }
+
+  function handleLevelInput(e: Event) {
+    maxLevelValue = (e.currentTarget as HTMLInputElement).value;
+    emitChange();
+  }
+
+  function handleAttrsInput(e: Event) {
+    maxAttrsValue = (e.currentTarget as HTMLInputElement).value;
+    emitChange();
+  }
+
   function emitChange() {
     onFilterChange({
-      maxAttrs: attrsEnabled && maxAttrsValue ? parseInt(maxAttrsValue, 10) : null,
-      maxLevel: levelEnabled && maxLevelValue ? parseInt(maxLevelValue, 10) : null,
+      maxAttrs: attrsEnabled ? parseValue(maxAttrsValue) : null,
+      maxLevel: levelEnabled ? parseValue(maxLevelValue) : null,
       selectedClasses,
     });
   }
 
   function clampInput() {
-    if (!maxAttrsValue || isNaN(Number(maxAttrsValue))) {
-      maxAttrsValue = "0";
-    }
-    if (!maxLevelValue || isNaN(Number(maxLevelValue))) {
-      maxLevelValue = "0";
-    }
+    const clamp = (val: string): string => {
+      if (!val) return "0";
+      const n = parseInt(val, 10);
+      return isNaN(n) || n < 0 ? "0" : String(n);
+    };
+    maxAttrsValue = clamp(maxAttrsValue);
+    maxLevelValue = clamp(maxLevelValue);
     emitChange();
   }
 
@@ -58,8 +75,8 @@
       maxAttrsValue = "0";
     }
     onFilterChange({
-      maxAttrs: attrsEnabled ? null : parseInt(maxAttrsValue, 10),
-      maxLevel: levelEnabled && maxLevelValue ? parseInt(maxLevelValue, 10) : null,
+      maxAttrs: attrsEnabled ? null : parseValue(maxAttrsValue),
+      maxLevel: levelEnabled ? parseValue(maxLevelValue) : null,
       selectedClasses,
     });
   }
@@ -69,8 +86,8 @@
       maxLevelValue = "0";
     }
     onFilterChange({
-      maxAttrs: attrsEnabled && maxAttrsValue ? parseInt(maxAttrsValue, 10) : null,
-      maxLevel: levelEnabled ? null : parseInt(maxLevelValue, 10),
+      maxAttrs: attrsEnabled ? parseValue(maxAttrsValue) : null,
+      maxLevel: levelEnabled ? null : parseValue(maxLevelValue),
       selectedClasses,
     });
   }
@@ -80,8 +97,8 @@
     const updated =
       idx === -1 ? [...selectedClasses, cls] : selectedClasses.filter((c) => c !== cls);
     onFilterChange({
-      maxAttrs: attrsEnabled && maxAttrsValue ? parseInt(maxAttrsValue, 10) : null,
-      maxLevel: levelEnabled && maxLevelValue ? parseInt(maxLevelValue, 10) : null,
+      maxAttrs: attrsEnabled ? parseValue(maxAttrsValue) : null,
+      maxLevel: levelEnabled ? parseValue(maxLevelValue) : null,
       selectedClasses: updated,
     });
   }
@@ -109,8 +126,8 @@
     <input
       id="max-level"
       type="number"
-      bind:value={maxLevelValue}
-      oninput={emitChange}
+      value={maxLevelValue}
+      oninput={handleLevelInput}
       onblur={clampInput}
       disabled={!levelEnabled}
     />
@@ -125,8 +142,8 @@
     <input
       id="max-attrs"
       type="number"
-      bind:value={maxAttrsValue}
-      oninput={emitChange}
+      value={maxAttrsValue}
+      oninput={handleAttrsInput}
       onblur={clampInput}
       disabled={!attrsEnabled}
     />
@@ -219,6 +236,12 @@
 
   .class-toggle:hover {
     color: var(--color-text);
+  }
+
+  .class-toggle:focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 2px;
+    border-radius: 2px;
   }
 
   .class-grid {

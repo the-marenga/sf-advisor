@@ -23,7 +23,6 @@
         "*",
       );
     } catch (e) {
-      // ignore
       console.warn("postMessage fail", e);
     }
   }
@@ -31,25 +30,24 @@
   // Hook fetch
   if (ORIG.fetch) {
     window.fetch = async function (...args) {
+      // Check URL before touching the response body
+      const url = String(args[0]);
+      if (!/cmd\.php/i.test(url)) {
+        return ORIG.fetch.apply(this, args);
+      }
+
       try {
         const resp = await ORIG.fetch.apply(this, args);
         // clone response to be able to read body without interfering
         const cloned = resp.clone();
-
-        // read text if response seems textual or application/json
         cloned
           .text()
           .then((text) => {
-            try {
-              const url = String(args[0]);
-              if (/cmd.php/i.test(url)) {
-                trySend(url.split("cmd.php")[0], text);
-              }
-            } catch (e) {
-              console.warn(e);
-            }
+            trySend(url.split("cmd.php")[0], text);
           })
-          .catch(() => {});
+          .catch((err) => {
+            console.warn("Failed to read cloned fetch body", err);
+          });
         return resp;
       } catch (err) {
         // if fetch failed, propagate
@@ -77,20 +75,19 @@
         return _open.call(this, m, u, ...rest);
       };
       xhr.addEventListener("load", function () {
+        if (!url) return;
+        if (!/cmd\.php/i.test(url)) return;
         try {
-          if (url && /cmd\.php/i.test(url)) {
-            try {
-              const text = xhr.responseText;
-              trySend(url, text);
-            } catch (e) {}
-          }
+          const text = xhr.responseText;
+          trySend(url, text);
         } catch (e) {
           console.warn("XHR hook error", e);
         }
       });
       return xhr;
     }
-    // copy prototype so instanceOf checks still pass somewhat
+    // Assign the original prototype so instanceof checks against XMLHttpRequest still pass.
+    // NOTE: This breaks xhr.constructor, but no consumer in this extension relies on that.
     HookedXHR.prototype = ORIG.XMLHttpRequest.prototype;
     window.XMLHttpRequest = HookedXHR;
   })();

@@ -93,7 +93,7 @@
     if (!playerData) return;
     playerData.maxAttrsFilter = maxAttrs;
     playerData.maxLevel = maxLevel;
-    playerData.classFilter = selectedClasses.length > 0 ? selectedClasses : undefined;
+    playerData.classFilter = selectedClasses.length > 0 ? selectedClasses : null;
     await browser.storage.local.set({ [STORAGE_KEY]: playerData });
   }
 
@@ -190,10 +190,6 @@
 </div>
 
 <style>
-  :global(*) {
-    box-sizing: border-box;
-  }
-
   :global(body) {
     font-family:
       system-ui,

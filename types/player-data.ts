@@ -4,7 +4,7 @@ export interface PlayerData {
   level: number;
   attributes: number;
   scrapbook: string | null;
-  maxAttrsFilter?: number | null;
-  maxLevel?: number | null;
-  classFilter?: string[] | undefined;
+  maxAttrsFilter: number | null;
+  maxLevel: number | null;
+  classFilter: string[] | null;
 }
