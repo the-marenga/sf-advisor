@@ -300,8 +300,4 @@
   .empty-desc a:hover {
     text-decoration: underline;
   }
-
-  .empty-btn {
-    margin-top: 12px;
-  }
 </style>

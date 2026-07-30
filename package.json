@@ -14,13 +14,15 @@
     "zip:chrome": "wxt zip --browser chrome",
     "zip:firefox": "wxt zip --browser firefox",
     "compile": "wxt prepare",
-    "postinstall": "wxt prepare || true"
+    "postinstall": "wxt prepare || true",
+    "check": "svelte-check --tsconfig tsconfig.json && tsc --noEmit"
   },
   "devDependencies": {
     "@types/webextension-polyfill": "^0.12.3",
     "@wxt-dev/module-svelte": "^2.0.3",
+    "svelte": "^5.28.0",
+    "svelte-check": "^4.7.4",
     "typescript": "^5.8.3",
-    "wxt": "^0.20.0",
-    "svelte": "^5.28.0"
+    "wxt": "^0.20.0"
   }
 }

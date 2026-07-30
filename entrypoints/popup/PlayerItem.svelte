@@ -15,8 +15,6 @@
     return cls.replace(/([a-z])([A-Z])/g, "$1 $2");
   }
 
-  const displayName = $derived(player.player_name);
-
   function copyToClipboard() {
     navigator.clipboard.writeText(player.player_name).then(() => {
       clicked = true;

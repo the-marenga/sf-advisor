@@ -17,7 +17,9 @@
     }) => void;
   } = $props();
 
+  // svelte-ignore state_referenced_locally
   let maxAttrsValue = $state(maxAttrs?.toString() ?? "");
+  // svelte-ignore state_referenced_locally
   let maxLevelValue = $state(maxLevel?.toString() ?? "");
   let showClasses = $state(false);
 
