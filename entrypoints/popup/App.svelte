@@ -9,6 +9,7 @@
   interface PlayerData {
     playerName: string;
     server: string;
+    level: number;
     attributes: number;
     scrapbook: string | null;
     maxAttrsFilter?: number | null;
@@ -44,7 +45,7 @@
     if (data) {
       playerData = data;
       maxAttrs = data.maxAttrsFilter ?? null;
-      maxLevel = data.maxLevel ?? null;
+      maxLevel = data.maxLevel ?? (data.level ? data.level + 5 : null);
       selectedClasses = data.classFilter ?? [];
     }
   }
@@ -140,21 +141,20 @@
 
 <div class="container">
   {#if playerData}
-    <PlayerInfo {playerData} />
+    <PlayerInfo {playerData} onRefresh={handleRefresh} />
 
     <Filters
       {maxAttrs}
       {maxLevel}
       {selectedClasses}
       classes={CLASSES}
-      onRefresh={handleRefresh}
       onFilterChange={handleFilterChange}
     />
 
     {#if playerData.scrapbook}
       <div class="list-header">
         <div class="name">Name</div>
-        <div class="level">Lv</div>
+        <div class="level">Lvl</div>
         <div class="class">Class</div>
         <div class="new-items">New Items</div>
       </div>

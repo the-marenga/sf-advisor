@@ -3,6 +3,7 @@ import { defineBackground } from "wxt/utils/define-background";
 interface PlayerData {
   playerName: string;
   server: string;
+  level: number;
   attributes: number;
   scrapbook: string | null;
   maxAttrsFilter?: number | null;
@@ -42,11 +43,9 @@ export default defineBackground(() => {
               (k) => k in kvs,
             ) ?? null;
           if (ownplayersaveKey) {
-            const attributes = kvs[ownplayersaveKey]
-              .split("/")
-              .slice(30, 40)
-              .map(Number)
-              .reduce((a, b) => a + b, 0);
+            const parts = kvs[ownplayersaveKey].split("/");
+            const attributes = parts.slice(30, 40).map(Number).reduce((a, b) => a + b, 0);
+            const level = (Number(parts[3]) || 0) & 0xffff;
 
             const old = (
               await browser.storage.local.get(STORAGE_KEY)
@@ -57,6 +56,7 @@ export default defineBackground(() => {
                 const playerData: PlayerData = {
                   playerName: kvs.ownplayername,
                   server: url,
+                  level,
                   attributes,
                   scrapbook: null,
                 };
@@ -77,6 +77,7 @@ export default defineBackground(() => {
                   old.scrapbook = null;
                   old.playerName = kvs.ownplayername;
                   old.server = url;
+                  old.level = level;
                   old.attributes = attributes;
                 }
               }

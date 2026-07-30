@@ -4,14 +4,12 @@
     maxLevel,
     selectedClasses,
     classes,
-    onRefresh,
     onFilterChange,
   }: {
     maxAttrs: number | null;
     maxLevel: number | null;
     selectedClasses: string[];
     classes: readonly string[];
-    onRefresh: () => void;
     onFilterChange: (opts: {
       maxAttrs: number | null;
       maxLevel: number | null;
@@ -21,6 +19,7 @@
 
   let maxAttrsValue = $state(maxAttrs?.toString() ?? "");
   let maxLevelValue = $state(maxLevel?.toString() ?? "");
+  let showClasses = $state(false);
 
   // Sync from props when they change externally
   $effect(() => {
@@ -49,30 +48,21 @@
       selectedClasses: updated,
     });
   }
+
+  function labelFor(cls: string): string {
+    switch (cls) {
+      case "BattleMage": return "Battle Mage";
+      case "DemonHunter": return "Demon Hunter";
+      case "PlagueDoctor": return "Plague Doctor";
+      default: return cls;
+    }
+  }
+
+  const selectedCount = $derived(selectedClasses.length);
 </script>
 
-<div class="controls">
-  <div class="attributes">
-    <label for="max-attrs">Max Attributes</label>
-    <input
-      id="max-attrs"
-      type="number"
-      bind:value={maxAttrsValue}
-      oninput={emitChange}
-    />
-    <i
-      class="material-icons-outlined help-icon"
-      title="Only consider enemies, that have at most this many total attributes (The sum of strength, dexterity, etc.)"
-    >help_outline</i>
-  </div>
-  <button onclick={onRefresh}>
-    <i class="material-icons-outlined refresh-icon">refresh</i>
-    Refresh
-  </button>
-</div>
-
-<div class="filters-row">
-  <div class="level">
+<div class="input-row">
+  <div class="field">
     <label for="max-level">Max Level</label>
     <input
       id="max-level"
@@ -85,48 +75,65 @@
       title="Only consider enemies at or below this level"
     >help_outline</i>
   </div>
-
-  {#each classes as cls}
-    <div class="class-filter">
-      <input
-        type="checkbox"
-        id="class-{cls.toLowerCase()}"
-        checked={selectedClasses.includes(cls)}
-        onchange={() => handleClassToggle(cls)}
-      />
-      <label for="class-{cls.toLowerCase()}">
-        {cls === "BattleMage" ? "Battle Mage"
-          : cls === "DemonHunter" ? "Demon Hunter"
-          : cls === "PlagueDoctor" ? "Plague Doctor"
-          : cls}
-      </label>
-    </div>
-  {/each}
+  <div class="field">
+    <label for="max-attrs">Max Attributes</label>
+    <input
+      id="max-attrs"
+      type="number"
+      bind:value={maxAttrsValue}
+      oninput={emitChange}
+    />
+    <i
+      class="material-icons-outlined help-icon"
+      title="Only consider enemies, that have at most this many total attributes (The sum of strength, dexterity, etc.)"
+    >help_outline</i>
+  </div>
 </div>
 
+<button
+  class="class-toggle"
+  onclick={() => (showClasses = !showClasses)}
+>
+  <i class="material-icons-outlined">{showClasses ? "expand_less" : "expand_more"}</i>
+  Class filter{selectedCount > 0 ? ` (${selectedCount})` : ""}
+</button>
+
+{#if showClasses}
+  <div class="class-grid">
+    {#each classes as cls}
+      <div class="class-filter">
+        <input
+          type="checkbox"
+          id="class-{cls.toLowerCase()}"
+          checked={selectedClasses.includes(cls)}
+          onchange={() => handleClassToggle(cls)}
+        />
+        <label for="class-{cls.toLowerCase()}">{labelFor(cls)}</label>
+      </div>
+    {/each}
+  </div>
+{/if}
+
 <style>
-  .controls {
-    margin-bottom: 12px;
+  .input-row {
     display: flex;
-    gap: 8px;
-    align-items: center;
-    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
   }
 
-  .attributes {
+  .field {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
   }
 
-  .attributes label,
-  .level label,
-  .class-filter label {
-    font-size: 14px;
+  .field label {
+    font-size: 13px;
+    white-space: nowrap;
   }
 
-  .attributes input,
-  .level input {
+  .field input {
     width: 60px;
     padding: 4px;
     border-radius: 4px;
@@ -135,52 +142,55 @@
     color: var(--color-text);
   }
 
-  .filters-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 16px;
-    margin-bottom: 12px;
+  .class-toggle {
+    all: unset;
+    display: inline-flex;
     align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--color-gray100);
+    cursor: pointer;
+    padding: 2px 0;
+    margin-bottom: 8px;
   }
 
-  .filters-row .class-filter {
+  .class-toggle:hover {
+    color: var(--color-text);
+  }
+
+  .class-toggle i {
+    font-size: 18px !important;
+  }
+
+  .class-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin-bottom: 12px;
+    padding: 8px;
+    background-color: var(--color-gray500);
+    border-radius: 6px;
+  }
+
+  .class-filter {
     display: flex;
     align-items: center;
     gap: 4px;
   }
 
-  .filters-row .class-filter label {
+  .class-filter label {
     font-size: 13px;
     cursor: pointer;
   }
 
-  .filters-row .class-filter input[type="checkbox"] {
+  .class-filter input[type="checkbox"] {
     accent-color: var(--color-blue);
     cursor: pointer;
   }
 
-  button {
-    padding: 6px 12px;
-    border: none;
-    background-color: var(--color-blue);
-    color: var(--color-text);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  button:hover {
-    background-color: #a9c2f5;
-  }
-
   .help-icon {
     cursor: help;
-    font-size: 18px !important;
-  }
-
-  .refresh-icon {
-    font-size: 18px !important;
+    font-size: 16px !important;
+    color: var(--color-gray200);
   }
 </style>
