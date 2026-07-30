@@ -163,8 +163,8 @@
     {:else}
       <div class="empty-state">
         <span class="material-icons-outlined empty-icon">menu_book</span>
-        <p class="empty-title">Scrapbook not found</p>
-        <p class="empty-desc">Open your scrapbook in the game to capture its data, then refresh the advisor.</p>
+        <p class="empty-title">No scrapbook data yet</p>
+        <p class="empty-desc">Keep playing — the extension will capture your scrapbook data as soon as the game sends it.</p>
       </div>
     {/if}
   {:else}
@@ -174,7 +174,7 @@
       <p class="empty-desc">
         Open
         <a href="https://sfgame.net" target="_blank" rel="noopener noreferrer">sfgame.net</a>,
-        log in with your character, and open the scrapbook in-game. The extension will detect it automatically.
+        log in with your character, and play the game. The extension will detect your character automatically.
       </p>
     </div>
   {/if}
