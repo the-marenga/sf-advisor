@@ -27,6 +27,6 @@
     "wxt": "^0.21.2"
   },
   "dependencies": {
-    "lucide-svelte": "^1.0.1"
+    "@lucide/svelte": "^1.0.0"
   }
 }

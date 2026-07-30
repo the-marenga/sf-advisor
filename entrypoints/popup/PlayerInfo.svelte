@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { RefreshCw } from "lucide-svelte";
+  import { RefreshCw } from "@lucide/svelte";
 
   interface PlayerData {
     playerName: string;

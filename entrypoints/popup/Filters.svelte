@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { HelpCircle, ChevronDown, ChevronUp } from "lucide-svelte";
+  import { HelpCircle, ChevronDown, ChevronUp } from "@lucide/svelte";
   let {
     maxAttrs,
     maxLevel,

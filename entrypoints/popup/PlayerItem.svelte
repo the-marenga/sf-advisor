@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Copy } from "lucide-svelte";
+  import { Copy } from "@lucide/svelte";
 
   interface ScrapbookAdvice {
     player_name: string;

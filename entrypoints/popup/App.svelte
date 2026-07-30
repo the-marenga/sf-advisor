@@ -2,7 +2,7 @@
   import PlayerInfo from "./PlayerInfo.svelte";
   import Filters from "./Filters.svelte";
   import PlayerList from "./PlayerList.svelte";
-  import { BookOpenText, Compass } from "lucide-svelte";
+  import { BookOpenText, Compass } from "@lucide/svelte";
   import type { PlayerData } from "../../types/player-data";
 
   const STORAGE_KEY = "scrapbook_data";
