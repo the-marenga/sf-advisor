@@ -163,9 +163,9 @@
   }
 
   .class-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 14px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
     margin-bottom: 12px;
     padding: 8px;
     background-color: var(--color-gray500);
@@ -175,7 +175,13 @@
   .class-filter {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
+    padding: 4px 6px;
+    border-radius: 4px;
+  }
+
+  .class-filter:hover {
+    background-color: var(--color-gray400);
   }
 
   .class-filter label {

@@ -35,8 +35,9 @@
   let selectedClasses = $state<string[]>([]);
 
   const CLASSES = [
-    "Warrior", "Mage", "Scout", "Assassin", "BattleMage",
-    "Berserker", "DemonHunter", "Druid", "Bard", "Necromancer", "Paladin", "PlagueDoctor",
+    "Assassin", "Bard", "BattleMage", "Berserker",
+    "DemonHunter", "Druid", "Mage", "Necromancer",
+    "Paladin", "PlagueDoctor", "Scout", "Warrior",
   ] as const;
 
   async function loadData() {
