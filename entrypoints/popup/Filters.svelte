@@ -21,18 +21,37 @@
   let maxLevelValue = $state(maxLevel?.toString() ?? "");
   let showClasses = $state(false);
 
-  // Sync from props when they change externally
+  // Sync input values from props (when parent changes them)
   $effect(() => {
-    maxAttrsValue = maxAttrs?.toString() ?? "";
+    if (maxAttrs != null) maxAttrsValue = maxAttrs.toString();
   });
   $effect(() => {
-    maxLevelValue = maxLevel?.toString() ?? "";
+    if (maxLevel != null) maxLevelValue = maxLevel.toString();
   });
+
+  const attrsEnabled = $derived(maxAttrs != null);
+  const levelEnabled = $derived(maxLevel != null);
 
   function emitChange() {
     onFilterChange({
-      maxAttrs: maxAttrsValue ? parseInt(maxAttrsValue, 10) : null,
-      maxLevel: maxLevelValue ? parseInt(maxLevelValue, 10) : null,
+      maxAttrs: attrsEnabled && maxAttrsValue ? parseInt(maxAttrsValue, 10) : null,
+      maxLevel: levelEnabled && maxLevelValue ? parseInt(maxLevelValue, 10) : null,
+      selectedClasses,
+    });
+  }
+
+  function toggleAttrs() {
+    onFilterChange({
+      maxAttrs: attrsEnabled ? null : (parseInt(maxAttrsValue, 10) || null),
+      maxLevel: levelEnabled && maxLevelValue ? parseInt(maxLevelValue, 10) : null,
+      selectedClasses,
+    });
+  }
+
+  function toggleLevel() {
+    onFilterChange({
+      maxAttrs: attrsEnabled && maxAttrsValue ? parseInt(maxAttrsValue, 10) : null,
+      maxLevel: levelEnabled ? null : (parseInt(maxLevelValue, 10) || null),
       selectedClasses,
     });
   }
@@ -43,8 +62,8 @@
       ? [...selectedClasses, cls]
       : selectedClasses.filter((c) => c !== cls);
     onFilterChange({
-      maxAttrs: maxAttrsValue ? parseInt(maxAttrsValue, 10) : null,
-      maxLevel: maxLevelValue ? parseInt(maxLevelValue, 10) : null,
+      maxAttrs: attrsEnabled && maxAttrsValue ? parseInt(maxAttrsValue, 10) : null,
+      maxLevel: levelEnabled && maxLevelValue ? parseInt(maxLevelValue, 10) : null,
       selectedClasses: updated,
     });
   }
@@ -61,27 +80,42 @@
   const selectedCount = $derived(selectedClasses.length);
 </script>
 
-<div class="input-row">
-  <div class="field">
-    <label for="max-level">Max Level</label>
+<div class="filters-column">
+  <div class="filter-row">
+    <input
+      type="checkbox"
+      id="chk-level"
+      checked={levelEnabled}
+      onchange={toggleLevel}
+    />
+    <label for="chk-level" class="filter-label">Max Level</label>
     <input
       id="max-level"
       type="number"
       bind:value={maxLevelValue}
       oninput={emitChange}
+      disabled={!levelEnabled}
     />
     <i
       class="material-icons-outlined help-icon"
       title="Only consider enemies at or below this level"
     >help_outline</i>
   </div>
-  <div class="field">
-    <label for="max-attrs">Max Attributes</label>
+
+  <div class="filter-row">
+    <input
+      type="checkbox"
+      id="chk-attrs"
+      checked={attrsEnabled}
+      onchange={toggleAttrs}
+    />
+    <label for="chk-attrs" class="filter-label">Max Attributes</label>
     <input
       id="max-attrs"
       type="number"
       bind:value={maxAttrsValue}
       oninput={emitChange}
+      disabled={!attrsEnabled}
     />
     <i
       class="material-icons-outlined help-icon"
@@ -115,31 +149,43 @@
 {/if}
 
 <style>
-  .input-row {
+  .filters-column {
     display: flex;
-    gap: 16px;
+    flex-direction: column;
+    gap: 6px;
     margin-bottom: 8px;
-    flex-wrap: wrap;
   }
 
-  .field {
+  .filter-row {
     display: flex;
     align-items: center;
     gap: 6px;
   }
 
-  .field label {
-    font-size: 13px;
-    white-space: nowrap;
+  .filter-row input[type="checkbox"] {
+    accent-color: var(--color-blue);
+    cursor: pointer;
+    margin: 0;
   }
 
-  .field input {
+  .filter-label {
+    font-size: 13px;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .filter-row input[type="number"] {
     width: 60px;
-    padding: 4px;
+    padding: 3px 4px;
     border-radius: 4px;
     border: 1px solid var(--color-gray300);
     background-color: var(--color-gray400);
     color: var(--color-text);
+  }
+
+  .filter-row input[type="number"]:disabled {
+    opacity: 0.4;
   }
 
   .class-toggle {
