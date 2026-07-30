@@ -195,6 +195,7 @@
     color: var(--color-text);
     display: flex;
     flex-direction: column;
+    overflow: hidden;
   }
 
   :global(:root) {
