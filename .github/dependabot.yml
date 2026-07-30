@@ -1,0 +1,44 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      wxt:
+        patterns:
+          - "wxt"
+          - "@wxt-dev/*"
+        update-types:
+          - minor
+          - patch
+      svelte:
+        patterns:
+          - "svelte"
+          - "@sveltejs/*"
+        update-types:
+          - minor
+          - patch
+      typescript:
+        patterns:
+          - "typescript"
+      dev-minor-patch:
+        patterns:
+          - "@types/*"
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      actions-minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
