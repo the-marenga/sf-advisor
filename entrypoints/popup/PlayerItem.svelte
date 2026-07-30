@@ -88,17 +88,19 @@
   .level {
     width: 36px;
     text-align: center;
-    font-size: 13px;
+    font-size: 14px;
+    font-weight: 700;
     font-variant-numeric: tabular-nums;
-    color: var(--color-gray100);
+    color: var(--color-text);
   }
 
   .class {
     width: 80px;
     text-align: center;
-    font-size: 10px;
-    color: var(--color-gray100);
-    background-color: var(--color-gray600);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-blue);
+    background-color: color-mix(in srgb, var(--color-blue) 12%, transparent);
     padding: 2px 4px;
     border-radius: 10px;
     overflow: hidden;
