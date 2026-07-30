@@ -17,6 +17,54 @@ You can just login your character, open the extension and copy the name of the b
 
 ![preview](https://github.com/user-attachments/assets/b9b2a3a0-1cf0-415c-ae41-bbf752297923)
 
+## Development
+
+Built with [WXT](https://wxt.dev/) + [Svelte 5](https://svelte.dev/).
+
+```bash
+# Install dependencies
+npm install
+
+# Development (with HMR)
+npm run dev          # Chrome
+npm run dev:firefox  # Firefox
+
+# Build for production
+npm run build:chrome
+npm run build:firefox
+
+# Create distributable zip files
+npm run zip:chrome
+npm run zip:firefox
+```
+
+## Project structure
+
+```
+src/
+├── entrypoints/
+│   ├── background.ts         # Service worker / background script
+│   ├── content.ts            # Content script (injects page hook)
+│   └── popup/                # Popup UI (Svelte)
+│       ├── index.html
+│       ├── main.ts
+│       ├── App.svelte
+│       ├── PlayerInfo.svelte
+│       ├── Filters.svelte
+│       ├── PlayerList.svelte
+│       └── PlayerItem.svelte
+├── public/
+│   ├── icons/                # Extension icons
+│   └── injected_page_hook.js # Page-level script (runs in page context)
+├── wxt.config.ts
+├── tsconfig.json
+└── package.json
+```
+
+## License
+
+MIT — 2025
+
 <a href="https://chromewebstore.google.com/detail/sf-advisor/ochfmlpkkclpfmchdoademhenaobplbi">
   <img src="https://developer.chrome.com/static/docs/webstore/branding/image/HRs9MPufa1J1h5glNhut.png" 
        alt="Available in the Chrome Web Store" 

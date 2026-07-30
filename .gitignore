@@ -1,5 +1,5 @@
 # Dependencies
-*/node_modules
+node_modules/
 
 # Logs
 npm-debug.log*
@@ -14,3 +14,12 @@ yarn-error.log*
 .env.production.local
 *.zip
 .DS_Store
+
+# WXT build artifacts
+.output/
+.wxt/
+dist/
+dist-zip/
+
+# Tooling
+.reasonix/

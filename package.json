@@ -1,0 +1,26 @@
+{
+  "name": "sf-advisor",
+  "version": "1.1.0",
+  "description": "Helps you fill the scrapbook in Shakes and Fidget by showing you the players with the most items, that you have not found yet",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "dev:firefox": "wxt --browser firefox",
+    "build": "wxt build",
+    "build:chrome": "wxt build --browser chrome",
+    "build:firefox": "wxt build --browser firefox",
+    "zip": "wxt zip",
+    "zip:chrome": "wxt zip --browser chrome",
+    "zip:firefox": "wxt zip --browser firefox",
+    "compile": "wxt prepare",
+    "postinstall": "wxt prepare || true"
+  },
+  "devDependencies": {
+    "@types/webextension-polyfill": "^0.12.3",
+    "@wxt-dev/module-svelte": "^2.0.3",
+    "typescript": "^5.8.3",
+    "wxt": "^0.20.0",
+    "svelte": "^5.28.0"
+  }
+}
