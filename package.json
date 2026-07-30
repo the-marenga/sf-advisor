@@ -18,7 +18,6 @@
     "check": "svelte-check --tsconfig tsconfig.json && tsc --noEmit"
   },
   "devDependencies": {
-    "@types/webextension-polyfill": "^0.12.3",
     "@wxt-dev/module-svelte": "^2.0.3",
     "prettier": "^3.9.6",
     "prettier-plugin-svelte": "^4.1.1",
