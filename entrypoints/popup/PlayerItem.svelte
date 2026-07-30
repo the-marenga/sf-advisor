@@ -10,6 +10,13 @@
 
   let clicked = $state(false);
 
+  function displayClass(cls: string | undefined): string {
+    if (!cls) return "-";
+    return cls.replace(/([a-z])([A-Z])/g, "$1 $2");
+  }
+
+  const displayName = $derived(player.player_name);
+
   function copyToClipboard() {
     navigator.clipboard.writeText(player.player_name).then(() => {
       clicked = true;
@@ -44,7 +51,7 @@
     <span class="player-name">{player.player_name}</span>
   </div>
   <div class="level">{player.level != null ? player.level : "-"}</div>
-  <div class="class">{player.class ? player.class : "-"}</div>
+  <div class="class">{displayClass(player.class)}</div>
   <div class="new-items">{player.new_count}</div>
 </div>
 
@@ -87,14 +94,16 @@
   }
 
   .class {
-    width: 72px;
+    width: 80px;
     text-align: center;
-    font-size: 11px;
-    text-transform: capitalize;
+    font-size: 10px;
     color: var(--color-gray100);
     background-color: var(--color-gray600);
-    padding: 2px 6px;
+    padding: 2px 4px;
     border-radius: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .new-items {

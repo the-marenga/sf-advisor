@@ -249,7 +249,7 @@
   }
 
   .list-header .class {
-    width: 72px;
+    width: 80px;
     text-align: center;
   }
 
