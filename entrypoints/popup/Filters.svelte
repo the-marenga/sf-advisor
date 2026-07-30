@@ -40,18 +40,34 @@
     });
   }
 
+  function clampInput() {
+    if (!maxAttrsValue || isNaN(Number(maxAttrsValue))) {
+      maxAttrsValue = "0";
+    }
+    if (!maxLevelValue || isNaN(Number(maxLevelValue))) {
+      maxLevelValue = "0";
+    }
+    emitChange();
+  }
+
   function toggleAttrs() {
+    if (!maxAttrsValue || isNaN(Number(maxAttrsValue))) {
+      maxAttrsValue = "0";
+    }
     onFilterChange({
-      maxAttrs: attrsEnabled ? null : (parseInt(maxAttrsValue, 10) || null),
+      maxAttrs: attrsEnabled ? null : parseInt(maxAttrsValue, 10),
       maxLevel: levelEnabled && maxLevelValue ? parseInt(maxLevelValue, 10) : null,
       selectedClasses,
     });
   }
 
   function toggleLevel() {
+    if (!maxLevelValue || isNaN(Number(maxLevelValue))) {
+      maxLevelValue = "0";
+    }
     onFilterChange({
       maxAttrs: attrsEnabled && maxAttrsValue ? parseInt(maxAttrsValue, 10) : null,
-      maxLevel: levelEnabled ? null : (parseInt(maxLevelValue, 10) || null),
+      maxLevel: levelEnabled ? null : parseInt(maxLevelValue, 10),
       selectedClasses,
     });
   }
@@ -94,6 +110,7 @@
       type="number"
       bind:value={maxLevelValue}
       oninput={emitChange}
+      onblur={clampInput}
       disabled={!levelEnabled}
     />
     <i
@@ -115,6 +132,7 @@
       type="number"
       bind:value={maxAttrsValue}
       oninput={emitChange}
+      onblur={clampInput}
       disabled={!attrsEnabled}
     />
     <i
