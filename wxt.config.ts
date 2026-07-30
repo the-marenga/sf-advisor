@@ -4,7 +4,7 @@ export default defineConfig({
   modules: ["@wxt-dev/module-svelte"],
   manifest: {
     name: "S&F Advisor",
-    version: "1.1",
+    version: "1.2",
     description:
       "Helps you fill the scrapbook in Shakes and Fidget by showing you the players with the most items, that you have not found yet",
     permissions: ["storage"],
