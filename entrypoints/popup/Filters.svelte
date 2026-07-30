@@ -235,6 +235,17 @@
     padding: 6px;
     background-color: var(--color-gray500);
     border-radius: 6px;
+    max-height: 160px;
+    overflow-y: auto;
+  }
+
+  .class-grid::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .class-grid::-webkit-scrollbar-thumb {
+    background: var(--color-gray300);
+    border-radius: 2px;
   }
 
   .class-filter {
