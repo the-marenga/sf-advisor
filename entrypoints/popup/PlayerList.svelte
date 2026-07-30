@@ -40,6 +40,7 @@
     gap: 5px;
     overflow-y: auto;
     flex: 1;
+    min-height: 0;
   }
 
   .list::-webkit-scrollbar {
