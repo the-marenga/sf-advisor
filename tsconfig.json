@@ -1,23 +1,15 @@
 {
+  "extends": "./.wxt/tsconfig.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "verbatimModuleSyntax": true,
-    "types": ["wxt/client"]
+    "verbatimModuleSyntax": true
   },
   "include": [
     "entrypoints/**/*.ts",
     "entrypoints/**/*.svelte",
-    "wxt.config.ts"
+    "wxt.config.ts",
+    ".wxt/wxt.d.ts"
   ]
 }

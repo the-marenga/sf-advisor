@@ -20,7 +20,7 @@ const STORAGE_KEY = "scrapbook_data";
 
 export default defineBackground(() => {
   browser.runtime.onMessage.addListener(
-    (msg: unknown, _sender: browser.runtime.MessageSender) => {
+    (msg: unknown, _sender: unknown) => {
       const data = msg as SFCaptureMessage;
       if (!data || data.type !== "SF_CAPTURE") return false;
 
