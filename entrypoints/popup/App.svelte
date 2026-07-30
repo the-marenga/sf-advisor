@@ -141,25 +141,47 @@
 <div class="container">
   {#if playerData}
     <PlayerInfo {playerData} />
+
+    <Filters
+      {maxAttrs}
+      {maxLevel}
+      {selectedClasses}
+      classes={CLASSES}
+      onRefresh={handleRefresh}
+      onFilterChange={handleFilterChange}
+    />
+
+    {#if playerData.scrapbook}
+      <div class="list-header">
+        <div class="name">Name</div>
+        <div class="level">Lv</div>
+        <div class="class">Class</div>
+        <div class="new-items">New Items</div>
+      </div>
+
+      <PlayerList {players} {loading} {error} />
+    {:else}
+      <div class="empty-state">
+        <span class="material-icons-outlined empty-icon">menu_book</span>
+        <p class="empty-title">Scrapbook not found</p>
+        <p class="empty-desc">Open your scrapbook in the game to capture its data, then refresh the advisor.</p>
+      </div>
+    {/if}
+  {:else}
+    <div class="empty-state">
+      <span class="material-icons-outlined empty-icon">travel_explore</span>
+      <p class="empty-title">Welcome to S&amp;F Advisor!</p>
+      <p class="empty-desc">
+        Open
+        <a href="https://sfgame.net" target="_blank" rel="noopener noreferrer">sfgame.net</a>,
+        log in with your character, and then refresh this popup.
+      </p>
+      <button onclick={handleRefresh} class="empty-btn">
+        <i class="material-icons-outlined refresh-icon">refresh</i>
+        Refresh
+      </button>
+    </div>
   {/if}
-
-  <Filters
-    {maxAttrs}
-    {maxLevel}
-    {selectedClasses}
-    classes={CLASSES}
-    onRefresh={handleRefresh}
-    onFilterChange={handleFilterChange}
-  />
-
-  <div class="list-header">
-    <div class="name">Name</div>
-    <div class="level">Lv</div>
-    <div class="class">Class</div>
-    <div class="new-items">New Items</div>
-  </div>
-
-  <PlayerList {players} {loading} {error} />
 </div>
 
 <style>
@@ -235,5 +257,50 @@
   .list-header .new-items {
     width: 100px;
     text-align: center;
+  }
+
+  .empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    gap: 8px;
+  }
+
+  .empty-icon {
+    font-size: 48px !important;
+    color: var(--color-gray300);
+    margin-bottom: 8px;
+  }
+
+  .empty-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--color-text);
+  }
+
+  .empty-desc {
+    font-size: 13px;
+    color: var(--color-gray100);
+    margin: 0;
+    max-width: 300px;
+    line-height: 1.5;
+  }
+
+  .empty-desc a {
+    color: var(--color-blue);
+    text-decoration: none;
+  }
+
+  .empty-desc a:hover {
+    text-decoration: underline;
+  }
+
+  .empty-btn {
+    margin-top: 12px;
   }
 </style>
