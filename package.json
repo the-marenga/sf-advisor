@@ -24,5 +24,8 @@
     "svelte-check": "^4.7.4",
     "typescript": "^5.8.3",
     "wxt": "^0.20.0"
+  },
+  "dependencies": {
+    "lucide-svelte": "^1.0.1"
   }
 }

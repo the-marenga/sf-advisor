@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { RefreshCw } from "lucide-svelte";
+
   interface PlayerData {
     playerName: string;
     server: string;
@@ -21,7 +23,7 @@
       <div class="server">{playerData.server}</div>
     </div>
     <button onclick={onRefresh}>
-      <i class="material-icons-outlined refresh-icon">refresh</i>
+      <RefreshCw size={16} />
       Refresh
     </button>
   </div>
@@ -65,9 +67,5 @@
 
   button:hover {
     background-color: #a9c2f5;
-  }
-
-  .refresh-icon {
-    font-size: 16px !important;
   }
 </style>

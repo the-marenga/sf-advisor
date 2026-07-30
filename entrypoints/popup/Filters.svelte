@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { HelpCircle, ChevronDown, ChevronUp } from "lucide-svelte";
   let {
     maxAttrs,
     maxLevel,
@@ -115,10 +116,9 @@
       onblur={clampInput}
       disabled={!levelEnabled}
     />
-    <i
-      class="material-icons-outlined help-icon"
-      title="Only consider enemies at or below this level"
-    >help_outline</i>
+    <span title="Only consider enemies at or below this level" class="help-icon">
+      <HelpCircle size={16} />
+    </span>
   </div>
 
   <div class="filter-row">
@@ -137,10 +137,9 @@
       onblur={clampInput}
       disabled={!attrsEnabled}
     />
-    <i
-      class="material-icons-outlined help-icon"
-      title="Only consider enemies, that have at most this many total attributes (The sum of strength, dexterity, etc.)"
-    >help_outline</i>
+    <span title="Only consider enemies, that have at most this many total attributes (The sum of strength, dexterity, etc.)" class="help-icon">
+      <HelpCircle size={16} />
+    </span>
   </div>
 </div>
 
@@ -148,7 +147,11 @@
   class="class-toggle"
   onclick={() => (showClasses = !showClasses)}
 >
-  <i class="material-icons-outlined">{showClasses ? "expand_less" : "expand_more"}</i>
+  {#if showClasses}
+    <ChevronUp size={18} />
+  {:else}
+    <ChevronDown size={18} />
+  {/if}
   Class filter{selectedCount > 0 ? ` (${selectedCount})` : ""}
 </button>
 
@@ -225,10 +228,6 @@
     color: var(--color-text);
   }
 
-  .class-toggle i {
-    font-size: 18px !important;
-  }
-
   .class-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -274,7 +273,7 @@
 
   .help-icon {
     cursor: help;
-    font-size: 16px !important;
+    display: inline-flex;
     color: var(--color-gray200);
   }
 </style>

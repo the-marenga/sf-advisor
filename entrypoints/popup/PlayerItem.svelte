@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { Copy } from "lucide-svelte";
+
   interface ScrapbookAdvice {
     player_name: string;
     new_count: string;
@@ -37,15 +39,17 @@
 <div class="item">
   <div class="name">
     <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
-    <i
-      class="material-icons-outlined copy-icon"
+    <span
+      class="copy-btn"
       class:clicked
       title="Copy player name"
       role="button"
       tabindex="0"
       onclick={copyToClipboard}
       onkeydown={handleKeydown}
-    >content_copy</i>
+    >
+      <Copy size={16} />
+    </span>
     <span class="player-name">{player.player_name}</span>
   </div>
   <div class="level">{player.level != null ? player.level : "-"}</div>
@@ -112,19 +116,19 @@
     color: var(--color-blue);
   }
 
-  .copy-icon {
+  .copy-btn {
     cursor: pointer;
-    font-size: 16px !important;
+    display: inline-flex;
     color: var(--color-gray200);
     transition: color 0.15s;
     flex-shrink: 0;
   }
 
-  .copy-icon:hover {
+  .copy-btn:hover {
     color: var(--color-text);
   }
 
-  .copy-icon.clicked {
+  .copy-btn.clicked {
     color: var(--color-yellow);
   }
 </style>

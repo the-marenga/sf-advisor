@@ -2,6 +2,7 @@
   import PlayerInfo from "./PlayerInfo.svelte";
   import Filters from "./Filters.svelte";
   import PlayerList from "./PlayerList.svelte";
+  import { BookOpenText, Compass } from "lucide-svelte";
 
   const STORAGE_KEY = "scrapbook_data";
   const MF_ENDPOINT = "https://mfbot-api.marenga.dev/scrapbook_advice";
@@ -163,14 +164,14 @@
       <PlayerList {players} {loading} {error} />
     {:else}
       <div class="empty-state">
-        <span class="material-icons-outlined empty-icon">menu_book</span>
+        <BookOpenText size={48} style="color: var(--color-gray300); margin-bottom: 8px;" />
         <p class="empty-title">No scrapbook data yet</p>
         <p class="empty-desc">Keep playing — the extension will capture your scrapbook data as soon as the game sends it.</p>
       </div>
     {/if}
   {:else}
     <div class="empty-state">
-      <span class="material-icons-outlined empty-icon">travel_explore</span>
+      <Compass size={48} style="color: var(--color-gray300); margin-bottom: 8px;" />
       <p class="empty-title">Welcome to S&amp;F Advisor!</p>
       <p class="empty-desc">
         Open
@@ -269,12 +270,6 @@
     text-align: center;
     padding: 24px;
     gap: 8px;
-  }
-
-  .empty-icon {
-    font-size: 48px !important;
-    color: var(--color-gray300);
-    margin-bottom: 8px;
   }
 
   .empty-title {
