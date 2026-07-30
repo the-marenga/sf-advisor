@@ -22,15 +22,17 @@ export default defineBackground(() => {
         const kvs: Record<string, string> = {};
         for (const part of body.split("&")) {
           const [key, value] = part.split(":");
-          if (!value) continue;
-          kvs[key.split(".")[0]] = value;
+          if (!key || !value) continue;
+          kvs[key.split(".")[0]!] = value;
         }
 
         // The game API renamed "ownplayersave" to "ownplayersavecharacter"; support both
         const ownplayersaveKey =
           ["ownplayersavecharacter", "ownplayersave"].find((k) => k in kvs) ?? null;
         if (ownplayersaveKey) {
-          const parts = kvs[ownplayersaveKey].split("/");
+          const raw = kvs[ownplayersaveKey];
+          if (!raw) return;
+          const parts = raw.split("/");
           const attributes = parts
             .slice(30, 40)
             .map(Number)
