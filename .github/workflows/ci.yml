@@ -3,11 +3,12 @@ name: CI
 on:
   push:
     branches: [main]
+    tags: ["v*.*.*"]
   pull_request:
     branches: [main]
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,14 +19,66 @@ jobs:
 
       - run: npm ci
 
-      - name: Check (svelte-check + tsc)
+      - name: Type check (svelte-check + tsc)
         run: npm run check
 
       - name: Format check
         run: npx prettier --check .
 
-      - name: Build (Chrome)
+  build:
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build Chrome
         run: npm run build:chrome
 
-      - name: Build (Firefox)
+      - name: Build Firefox
         run: npm run build:firefox
+
+      - name: Zip Chrome
+        run: npm run zip:chrome
+
+      - name: Zip Firefox
+        run: npm run zip:firefox
+
+      - name: Upload Chrome artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sf-advisor-chrome
+          path: .output/*-chrome*.zip
+          if-no-files-found: error
+
+      - name: Upload Firefox artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sf-advisor-firefox
+          path: .output/*-firefox*.zip
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all zips
+        uses: actions/download-artifact@v4
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            sf-advisor-chrome/*.zip
+            sf-advisor-firefox/*.zip
+          generate_release_notes: true
