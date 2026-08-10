@@ -22,7 +22,7 @@
     "prettier": "^3.9.6",
     "prettier-plugin-svelte": "^4.1.1",
     "svelte": "^5.28.0",
-    "svelte-check": "^4.7.4",
+    "svelte-check": "^4.7.5",
     "typescript": "~6.0.0",
     "wxt": "^0.21.3"
   },
