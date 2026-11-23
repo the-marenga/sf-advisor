@@ -20,7 +20,7 @@
   "devDependencies": {
     "@wxt-dev/module-svelte": "^2.0.3",
     "prettier": "^3.10.1",
-    "prettier-plugin-svelte": "^4.1.1",
+    "prettier-plugin-svelte": "^4.2.0",
     "svelte": "^5.57.3",
     "svelte-check": "^4.7.8",
     "typescript": "~6.0.0",
